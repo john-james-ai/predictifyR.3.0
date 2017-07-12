@@ -10,9 +10,11 @@
 #' saves the file in accordance with the file meta data (directory, filename).
 #'
 #' @param object - a list containing:
+#' \itemize{
 #'    \item{directory}{Directory into which the data is to be stored}
 #'    \item{fileName}{File name given to the file to be saved}
 #'    \item{data}{File contents}#'
+#'    }
 #' @author John James, \email{j2sdatalab@@gmail.com}
 #' @family io functions
 #' @export

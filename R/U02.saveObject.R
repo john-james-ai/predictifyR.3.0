@@ -11,9 +11,11 @@
 #' RDA file according to the metaData.
 #'
 #' @param object List containing:
+#' \itemize{
 #'    \item{directory}{Directory into which the data is to be stored}
 #'    \item{objName}{Object name given to the R object created}
 #'    \item{fileName}{File name for the R object created}
+#'    }
 #' @return object - R object saved
 #' @author John James, \email{j2sdatalab@@gmail.com}
 #' @family io functions

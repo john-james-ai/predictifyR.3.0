@@ -8,9 +8,11 @@ saveObject(object)
 }
 \arguments{
 \item{object}{List containing:
-\item{directory}{Directory into which the data is to be stored}
-\item{objName}{Object name given to the R object created}
-\item{fileName}{File name for the R object created}}
+\itemize{
+   \item{directory}{Directory into which the data is to be stored}
+   \item{objName}{Object name given to the R object created}
+   \item{fileName}{File name for the R object created}
+   }}
 }
 \value{
 object - R object saved
@@ -24,7 +26,8 @@ meta data (directory, object name, filename), and saves the data in an
 RDA file according to the metaData.
 }
 \seealso{
-Other io functions: \code{\link{loadObject}}
+Other io functions: \code{\link{loadObject}},
+  \code{\link{readFile}}, \code{\link{saveFile}}
 }
 \author{
 John James, \email{j2sdatalab@gmail.com}

@@ -21,7 +21,8 @@ filename. It loads the associated object into memory and returns it to the
 calling environment.
 }
 \seealso{
-Other io functions: \code{\link{saveObject}}
+Other io functions: \code{\link{readFile}},
+  \code{\link{saveFile}}, \code{\link{saveObject}}
 }
 \author{
 John James, \email{j2sdatalab@gmail.com}

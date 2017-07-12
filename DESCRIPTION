@@ -1,12 +1,47 @@
 Package: predictifyR
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Word Prediction Language Model Evaluation
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Authors@: person("John", "James", email = "j2sdatalab@gmail.com",
+                  role = c("aut", "cre"))
+Maintainer: John James <j2sdatalab@gmail.com>
+Description: An experimental study of language models, corpus design
+    and word prediction efficacy in four phases. The initial phase was
+    an exploratory data analysis of the English language HC Corpus, 
+    a collection of freely available texts comprised of over 2.5 billion 
+    words from 67 languages. Next, linquistically representative 
+    corpora of various  sizes were built and training, validation,
+    and test sets were preprocesed for modeling. The subsequent language
+    modeling phase concerned the implementation of Good-Turing / Katz,
+    Kneser Ney, Modified Kneser-Ney and Topic Model language models.
+    Finally, the language models were executed on corpora of various sizes
+    and word prediction perplexity measures were taken to illuminate
+    word prediction accuracy.
+License: MIT
 Encoding: UTF-8
 LazyData: true
+Depends: R (>= 3.4.1)
 RoxygenNote: 6.0.1
+Imports:
+    data.table,
+    doParallel,
+    fastmatch,
+    kfigr,
+    knitr,
+    R6,
+    ggplot2,
+    ggthemes,
+    gridExtra,
+    languageR,
+    NLP,
+    openNLP,
+    pbapply,
+    quanteda,
+    RCurl,
+    reshape2,
+    stringr,
+    tools,
+    tm,
+    wordcloud,
+    zipfR
+    
