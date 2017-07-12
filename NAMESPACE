@@ -2,6 +2,8 @@
 
 export(checkDir)
 export(chunkDocument)
+export(getData)
+export(init)
 export(loadObject)
 export(parallelizeTask)
 export(readFile)
