@@ -4,26 +4,24 @@
 \alias{summarizeAnalysis}
 \title{summarizeAnalysis}
 \usage{
-summarizeAnalysis(type, korpus, featureMatrix, featureSamples, regex)
+summarizeAnalysis(korpus, stats)
 }
 \arguments{
-\item{type}{Character string indicating type of analysis c("full", "fast:)}
+\item{korpus}{The corpus documents}
 
-\item{korpus}{- the korpus and its meta data}
-
-\item{featureMatrix}{- the feature matrix for the 3 registers}
+\item{stats}{The descriptive stats for the three registers.}
 }
 \value{
-totals - a data frame containing total feature counts for the corpus
+totals A data frame of descriptive statistics and totals
 }
 \description{
-\code{summarizeAnalysis} summarizes descriptive statistics and lexical features
+\code{summarizeAnalysis} summarizes descriptive statistics
 }
 \details{
-This function takes as its parameter, the type of analysis to be conducted,
-the korpus meta data, and the feature matrix and summarizes the descriptive
-statistics and lexical features at the corpus level.
+This function takes as its parameters, the corpus documents and the
+descriptive stats for the registers and produces summary statistics
+at the corpus level.
 }
 \author{
-John James
+John James, \email{j2sdatalab@gmail.com}
 }

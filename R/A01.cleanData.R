@@ -143,7 +143,6 @@ cleanDocument <- function(rawDocument) {
 cleanCorpus <- function(raw, clean) {
 
   startTime <- Sys.time()
-  flog.logger("green", INFO, appender=appender.tee('./log/green.log'))
   flog.info("Commencing corpus cleaning", name = 'green')
 
   # Clean Document
@@ -162,4 +161,3 @@ cleanCorpus <- function(raw, clean) {
   flog.info(msg, name = 'green')
 }
 ## ---- end
-#cleanCorpus(corpora$test, corpora$clean)

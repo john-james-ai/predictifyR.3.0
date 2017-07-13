@@ -4,30 +4,21 @@
 \alias{analyzeData}
 \title{analyzeData}
 \usage{
-analyzeData(type, metaData)
+analyzeData(korpus)
 }
 \arguments{
-\item{type}{- 'full' analysis or 'fast' (abbreviated) analysis}
-
-\item{metaData}{- the meta data for the corpora to be analyzed}
+\item{korpus}{- the meta data for the corpora to be analyzed}
 }
 \value{
-analysis - a list containing:
-  \itemize{
-   \item{metaData}{List containing file path and date of analysis}
-   \item{featureMatrix}{Dataframe of descriptive statistics}
-   \item{featureSamples}{List of lexical feature samples}
-   \item{featureTables}{List of data frames of lexical feature counts}
-   \item{totalWordLengths}{}
-  }
+analysis - data frame of descriptive statistics
 }
 \description{
-\code{analyzeData} summarizes descriptive statistics and lexical features
+\code{analyzeData} summarizes descriptive statistics fora corpus
 }
 \details{
 This function takes as its parameters, the type of analysis (full or fast),
 and the meta data for the corpus
 }
 \author{
-John James
+John James, \email{j2sdatalab@gmail.com}
 }
