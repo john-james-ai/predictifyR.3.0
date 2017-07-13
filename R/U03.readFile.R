@@ -17,16 +17,29 @@
 readFile <- function(object) {
 
   directory <- object$directory
-  file      <- object$fileName
+  fileName  <- object$fileName
+  filePath  <- file.path(directory, fileName)
 
-  if (file_ext(file) == 'txt' | file_ext(file) == 'dic') {
-    fileData <- readLines(file.path(directory, file))
-  } else {
-    if (file_ext(file) == 'csv') {
-      fileData <- read.csv(file.path(directory, file),
-                           header = TRUE,
-                           stringsAsFactors = FALSE)
-    }
+  # Error handling
+  if (!file.exists(filePath)) {
+    flog.error(paste('Error in readFile.', filePath, 'does not exist'), name = 'red')
+    stop()
+  } else if (!(file_ext(fileName) %in% c('txt', 'dic', 'csv'))) {
+    flog.error(paste('Error in readFile.
+                     Function valid for txt, dic, and csv files only'),
+               name = 'red')
+    stop()
+  }
+
+  # Establish connection
+  con <- file(file.path(directory, fileName))
+  on.exit(close(con))
+
+  # Read file
+  if (file_ext(fileName) == 'txt' | file_ext(fileName) == 'dic') {
+    fileData <- readLines(con)
+  } else if (file_ext(file) == 'csv') {
+      fileData <- read.csv(con, header = TRUE, stringsAsFactors = FALSE)
   }
 
   return(fileData)
