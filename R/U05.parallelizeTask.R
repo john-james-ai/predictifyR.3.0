@@ -16,17 +16,17 @@
 parallelizeTask <- function(task, ...) {
 
   # Calculate number of cores
-  ncores <- detectCores() - 1
+  ncores <- parallel::detectCores() - 1
 
   # Initiate cluster
-  cl <- makeCluster(ncores)
-  registerDoParallel(cl)
+  cl <- parallel::makeCluster(ncores)
+  doParallel::registerDoParallel(cl)
 
   # Run Task
   r <- task(...)
 
   # Stop cluster
-  stopCluster(cl)
+  parallel::stopCluster(cl)
 
   return(r)
 }

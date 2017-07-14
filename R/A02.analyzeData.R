@@ -13,19 +13,21 @@
 #' @param document The document content to be analyzed
 #' @return stats A list containing descriptive statistics
 #' @author John James, \email{j2sdatalab@@gmail.com}
+#' @seealso
+#'   \code{\link[quanteda]{tokenize}}
 #' @export
 getStats <- function(document) {
 
   # Tokenize document
-  flog.info('......tokenize the document', name = 'green')
+  futile.logger::flog.info('......tokenize the document', name = 'green')
   tokens <- unlist(quanteda::tokenize(unlist(document$data), what = 'word'))
 
   # Extract Words
-  flog.info("......extracting words", name = 'green')
+  futile.logger::flog.info("......extracting words", name = 'green')
   words <- grep(regexPatterns$words, tokens, value = TRUE, perl = TRUE)
   words <- words[nchar(words) > 0]
 
-  flog.info("......extracting descriptive statistics", name = 'green')
+  futile.logger::flog.info("......extracting descriptive statistics", name = 'green')
   stats <- list()
   stats$category   <- document$fileDesc
   stats$objectSize <- as.numeric(round((object.size(tokens) / 1000000), 1))
@@ -60,10 +62,10 @@ getStats <- function(document) {
 #' @export
 summarizeAnalysis <- function(korpus, stats) {
 
-  flog.info("...summarizing corpus feature totals", name = 'green')
+  futile.logger::flog.info("...summarizing corpus feature totals", name = 'green')
 
   # Obtain word types across the combined corpus
-  flog.info("......combine and tokenizing corpus", name = 'green')
+  futile.logger::flog.info("......combine and tokenizing corpus", name = 'green')
   sents <- unlist(lapply(seq_along(korpus), function(d) {
     korpus[[d]]$data
   }))
@@ -73,7 +75,7 @@ summarizeAnalysis <- function(korpus, stats) {
   words <- grep(regexPatterns$words, tokens, value = TRUE, perl = TRUE)
   words <- words[nchar(words) > 0]
 
-  flog.info("......summarizing Descriptive Statistics", name = 'green')
+  futile.logger::flog.info("......summarizing Descriptive Statistics", name = 'green')
   totals <- list()
   totals$category	  <- 	"Corpus"
   totals$objectSize <- sum(stats$objectSize)
@@ -110,7 +112,7 @@ analyzeData <- function(korpus) {
 
   startTime <- Sys.time()
 
-  flog.info(paste("Conducting a Analysis of", korpus$corpusName), name = 'green')
+  futile.logger::flog.info(paste("Conducting a Analysis of", korpus$corpusName), name = 'green')
 
   documents <- lapply(seq_along(korpus$documents), function(d) {
     k <- list()
@@ -123,7 +125,7 @@ analyzeData <- function(korpus) {
 
   # Inspect Individual Corpus Files
   stats <- rbindlist(lapply(seq_along(documents),function(x) {
-    flog.info(paste("...analyzing", korpus$documents[[x]]$fileDesc), name = 'green')
+    futile.logger::flog.info(paste("...analyzing", korpus$documents[[x]]$fileDesc), name = 'green')
     getStats(documents[[x]])
   }))
 
@@ -136,7 +138,7 @@ analyzeData <- function(korpus) {
   msg <- paste(korpus$corpusName, 'analysis complete. Elapsed time is',
                format(round(difftime(endTime, startTime,  units = 'auto'),
                             2)))
-  flog.info(msg, name = 'green')
+  futile.logger::flog.info(msg, name = 'green')
 
   return(totals)
 }

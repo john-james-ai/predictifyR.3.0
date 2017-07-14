@@ -16,10 +16,32 @@ cleanDocument Cleaned text document in unlisted vector format.
 \code{cleanDocument} cleans the HC Corpus document
 }
 \details{
-This function takes as its parameters, the meta data for the raw corpus
+This function takes as its parameter, rawDocument, a list containing both
+meta data and text data for the corpus document and performs the following
+normalization and cleaning tasks:
+\itemize{
+ \item{Converts null and substitute UTF-8 bytes to spaces}
+ \item{Reshapes the text into sentences}
+ \item{Normalizes quotes and hyphens}
+ \item{Normalizes contractions and abbreviations}
+ \item{Removes profanity}
+ \item{Removes non-ascii, non-printable, and control characters}
+ \item{Removes urls, hashtags, and email addresses}
+ \item{Removes digits, punctuation (except apostrophe)}
+ \item{Removes words greater than 40 characters long}
+ \item{Removes extra whitespace, empty sentences, and sentences with just punctuation}
+}
+
 document and performs a series of normalization and data cleaning tasks
 and returns the cleaned document to the calling environment.
 }
+\seealso{
+\code{\link[quanteda]{corpus}}
+  \code{\link[quanteda]{tokenize}}
+
+Other data processing functions: \code{\link{cleanCorpus}},
+  \code{\link{getData}}
+}
 \author{
-John James
+John James, \email{j2sdatalab@gmail.com}
 }

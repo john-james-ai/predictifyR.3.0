@@ -20,6 +20,9 @@ This function returns descriptive statistics for a document, including
 object size, sentences, tokens, words, types, characters, and
 word length statistics.
 }
+\seealso{
+\code{\link[quanteda]{tokenize}}
+}
 \author{
 John James, \email{j2sdatalab@gmail.com}
 }

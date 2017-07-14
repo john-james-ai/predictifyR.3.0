@@ -22,10 +22,10 @@ readFile <- function(object) {
 
   # Error handling
   if (!file.exists(filePath)) {
-    flog.error(paste('Error in readFile.', filePath, 'does not exist'), name = 'red')
+    futile.logger::flog.error(paste('Error in readFile.', filePath, 'does not exist'), name = 'red')
     stop()
-  } else if (!(file_ext(fileName) %in% c('txt', 'dic', 'csv'))) {
-    flog.error(paste('Error in readFile.
+  } else if (!(tools::file_ext(fileName) %in% c('txt', 'dic', 'csv'))) {
+    futile.logger::flog.error(paste('Error in readFile.
                      Function valid for txt, dic, and csv files only'),
                name = 'red')
     stop()
@@ -36,9 +36,9 @@ readFile <- function(object) {
   on.exit(close(con))
 
   # Read file
-  if (file_ext(fileName) == 'txt' | file_ext(fileName) == 'dic') {
+  if (tools::file_ext(fileName) == 'txt' | tools::file_ext(fileName) == 'dic') {
     fileData <- readLines(con)
-  } else if (file_ext(file) == 'csv') {
+  } else if (tools::file_ext(file) == 'csv') {
       fileData <- read.csv(con, header = TRUE, stringsAsFactors = FALSE)
   }
 

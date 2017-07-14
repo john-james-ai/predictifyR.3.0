@@ -7,18 +7,38 @@
 #'
 #'  \code{cleanDocument} cleans the HC Corpus document
 #'
-#' This function takes as its parameters, the meta data for the raw corpus
+#' This function takes as its parameter, rawDocument, a list containing both
+#' meta data and text data for the corpus document and performs the following
+#' normalization and cleaning tasks:
+#' \itemize{
+#'  \item{Converts null and substitute UTF-8 bytes to spaces}
+#'  \item{Reshapes the text into sentences}
+#'  \item{Normalizes quotes and hyphens}
+#'  \item{Normalizes contractions and abbreviations}
+#'  \item{Removes profanity}
+#'  \item{Removes non-ascii, non-printable, and control characters}
+#'  \item{Removes urls, hashtags, and email addresses}
+#'  \item{Removes digits, punctuation (except apostrophe)}
+#'  \item{Removes words greater than 40 characters long}
+#'  \item{Removes extra whitespace, empty sentences, and sentences with just punctuation}
+#' }
+#'
 #' document and performs a series of normalization and data cleaning tasks
 #' and returns the cleaned document to the calling environment.
 #'
 #' @param rawDocument - the meta data and content for the file to be analyzed
 #' @return cleanDocument Cleaned text document in unlisted vector format.
-#' @author John James
+#' @author John James, \email{j2sdatalab@@gmail.com}
+#' @seealso
+#'   \code{\link[quanteda]{corpus}}
+#'   \code{\link[quanteda]{tokenize}}
+#' @family data processing functions
 #' @export
 cleanDocument <- function(rawDocument) {
 
   # Normalize data - Remove null and substitute control characters
-  flog.info('......extracting null and substitute control characters', name = 'green')
+  futile.logger::flog.info('......extracting null and substitute control characters',
+                           name = 'green')
   document <- readBin(file.path(rawDocument$directory, rawDocument$fileName),
                       raw(), file.info(file.path(rawDocument$directory,
                                                  rawDocument$fileName))$size)
@@ -28,14 +48,15 @@ cleanDocument <- function(rawDocument) {
   writeBin(document, d)
 
   # Reshape data and convert to lower case
-  flog.info('......reshaping document into sentences', name = 'green')
+  futile.logger::flog.info('......reshaping document into sentences', name = 'green')
   document <- readLines(d)
+  unlink(d)
   korpus <- parallelizeTask(quanteda::corpus, document)
   document <- parallelizeTask(quanteda::tokenize, korpus, what = 'sentence')
   document <- tolower(document)
 
   # Normalize - UTF-8 Quotations and hyphens
-  flog.info('......normalizing UTF-8 quotations and hyphens', name = 'green')
+  futile.logger::flog.info('......normalizing UTF-8 quotations and hyphens', name = 'green')
   Encoding(document) <- "latin1"
   document <- enc2utf8(document)
   document <- gsub("â€™", "'", document)
@@ -45,14 +66,14 @@ cleanDocument <- function(rawDocument) {
   document <- iconv(document, "UTF-8", "ASCII", sub = "")
 
   # Conduct corrections
-  flog.info('......performing corrections', name = 'green')
+  futile.logger::flog.info('......performing corrections', name = 'green')
   key <- paste("\\b", corrections$key, "\\b", sep = "")
   value <- corrections$value
   for (i in 1:length(key)) {
     document <- gsub(key[i], value[i], document, perl = TRUE)
   }
 
-  flog.info('......removing profanity', name = 'green')
+  futile.logger::flog.info('......removing profanity', name = 'green')
   key <- paste("\\b", badWords$key, "\\b", sep = "")
   for (i in 1:length(key)) {
     document <- gsub(key[i], ' ', document, perl = TRUE)
@@ -95,10 +116,6 @@ cleanDocument <- function(rawDocument) {
       pattern = regexPatterns$strayApostrophe,
       desc    = 'stray apostrophes',
       replace = ''),
-    repeats = list(
-      pattern = regexPatterns$repeatedChars,
-      desc    = 'repeated character patterns',
-      replace = '\\1'),
     longWords = list(
       pattern = regexPatterns$longWords,
       desc    = 'words > 40 characters',
@@ -107,18 +124,18 @@ cleanDocument <- function(rawDocument) {
   )
 
   for (i in 1:length(normalize)) {
-    flog.info(paste('......normalizing', normalize[[i]]$desc), name = 'green')
+    futile.logger::flog.info(paste('......normalizing', normalize[[i]]$desc), name = 'green')
     document <- gsub(normalize[[i]]$pattern,
                         normalize[[i]]$replace,
                         document, perl = TRUE)
   }
 
   # Remove extra whitespace
-  flog.info('......removing extra whitespace', name = 'green')
+  futile.logger::flog.info('......removing extra whitespace', name = 'green')
   document <- stringr::str_replace(gsub(regexPatterns$whiteSpace, " ",
                                stringr::str_trim(document)), "B", "b")
 
-  flog.info("......removing empty sentences and sentences with just punctuation", name = 'green')
+  futile.logger::flog.info("......removing empty sentences", name = 'green')
   document <- document[document != ""]
   document <- document[document != "'"]
 
@@ -133,21 +150,24 @@ cleanDocument <- function(rawDocument) {
 #'
 #'  \code{cleanCorpus} cleans the HC Corpus
 #'
-#' This function cleans the raw corpus data and stores it in the designated
-#' directory
+#' This function takes as its parameters, the meta data for the raw and clean
+#' corpora, then performs normalization and cleaning tasks and stores it in
+#' the directory designated in the meta data.
 #'
 #' @param raw - the meta data for the reshaped raw corpus
 #' @param clean - the meta data for the clean corpus
 #' @author John James, \email{j2sdatalab@@gmail.com}
+#' @family data processing functions
 #' @export
 cleanCorpus <- function(raw, clean) {
 
   startTime <- Sys.time()
-  flog.info("Commencing corpus cleaning", name = 'green')
+  futile.logger::flog.info("Commencing corpus cleaning", name = 'green')
 
   # Clean Document
   lapply(seq_along(raw$documents), function(x) {
-    flog.info(paste('...cleaning', raw$documents[[x]]$fileDesc), name = 'green')
+    futile.logger::flog.info(paste('...cleaning', raw$documents[[x]]$fileDesc),
+                             name = 'green')
     clean$documents[[x]]$data <- cleanDocument(raw$documents[[x]])
     saveFile(clean$documents[[x]])
   })
@@ -158,6 +178,6 @@ cleanCorpus <- function(raw, clean) {
                'Elapsed time is',
                format(round(difftime(endTime, startTime,  units = 'auto'),
                             2)))
-  flog.info(msg, name = 'green')
+  futile.logger::flog.info(msg, name = 'green')
 }
 ## ---- end

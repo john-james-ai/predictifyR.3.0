@@ -13,28 +13,31 @@
 #' @param force = Logical. Force download and overwrite local copy if TRUE
 #' @return sysData Internal data and data structures
 #' @author John James, \email{j2sdatalab@@gmail.com}
+#' @family data processing functions
 #' @export
 getData <- function(force = FALSE) {
 
   # Set time and log entry
   startTime <- Sys.time()
-  flog.threshold(INFO)
-  flog.logger("green", INFO, appender=appender.file('./log/green.log'))
-  flog.logger("yellow", INFO, appender=appender.tee('./log/yellow.log'))
-  flog.logger("red", INFO, appender=appender.tee('./log/red.log'))
-  flog.info("Obtaining raw data", name = 'green')
+  # Set logger parameters
+  futile.logger::flog.threshold(INFO)
+  futile.logger::flog.logger("green", INFO, appender=appender.file('./log/green.log'))
+  futile.logger::flog.logger("yellow", INFO, appender=appender.tee('./log/yellow.log'))
+  futile.logger::flog.logger("red", INFO, appender=appender.tee('./log/red.log'))
+  futile.logger::flog.info("Obtaining raw data", name = 'green')
 
   # Download data
   if (dir.exists(corpora$raw$directory) &
       checkDir(corpora$raw$directory) == 3 &
       force == FALSE) {
-    flog.info("HC Corpus already exists, not downloaded / overwritten")
+    futile.logger::flog.info("HC Corpus already exists, not downloaded / overwritten")
   } else {
     downloadFile <- tempfile()
     download.file(corpora$raw$url, destfile = downloadFile, mode = 'wb')
     unzip(zipfile = downloadFile, overwrite = FALSE,
           exdir = corpora$raw$directory,
           junkpaths = TRUE, files = corpora$raw$registers)
+    unlink(downloadFile)
   }
 
   # Create log entry
@@ -43,6 +46,6 @@ getData <- function(force = FALSE) {
                'Elapsed time is',
                format(round(difftime(endTime, startTime,  units = 'auto'),
                             2)))
-  flog.info(msg, name = 'green')
+  futile.logger::flog.info(msg, name = 'green')
 }
 

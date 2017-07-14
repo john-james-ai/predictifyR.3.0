@@ -15,8 +15,13 @@ cleanCorpus(raw, clean)
 \code{cleanCorpus} cleans the HC Corpus
 }
 \details{
-This function cleans the raw corpus data and stores it in the designated
-directory
+This function takes as its parameters, the meta data for the raw and clean
+corpora, then performs normalization and cleaning tasks and stores it in
+the directory designated in the meta data.
+}
+\seealso{
+Other data processing functions: \code{\link{cleanDocument}},
+  \code{\link{getData}}
 }
 \author{
 John James, \email{j2sdatalab@gmail.com}

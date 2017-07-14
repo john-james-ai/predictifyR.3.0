@@ -127,17 +127,15 @@ testPackage <- function(raw, clean) {
 
 
   # Core processing
-  futile.logger::flog.logger("green", INFO, appender=appender.tee('./log/green.log'))
-  #testCleanCorpus(raw, clean)
-  #analysis <- testAnalyzeData(clean)
-  vgcFast <- testVGCFast(clean)
-  vgcFull <- testVGCFull(clean)
-  zipf <- testZipf(clean, vgcFull)
-  ss <- testEstSampleSize(clean, analysis)
-  su <- testEstSamplingUnit(clean, analysis)
-  cs <- testEstCorpusSize(clean)
-  rs <- testEstRegisterSize(clean, cs, su)
-  design <- testDesign(ss, rs, su, analysis)
+  futile.logger::flog.logger("green", threshold=INFO, appender=appender.tee('./log/green.log'))
+  analysis <<- testAnalyzeData(clean)
+  vgcFast <<- testVGCFast(clean)
+  zipf <<- testZipf(clean, vgcFast)
+  ss <<- testEstSampleSize(clean, analysis)
+  su <<- testEstSamplingUnit(clean, analysis)
+  cs <<- testEstCorpusSize(clean)
+  rs <<- testEstRegisterSize(clean, cs, su)
+  design <<- testDesign(ss, rs, su, analysis)
   futile.logger::flog.logger("green", INFO, appender=appender.file('./log/green.log'))
 }
 

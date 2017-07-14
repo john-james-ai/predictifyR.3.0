@@ -27,12 +27,12 @@ saveFile <- function(object) {
   filePath  <- file.path(object$directory, object$fileName)
 
   # Save file
-  if (file_ext(object$fileName) == 'txt' | file_ext(object$fileName) == 'dic') {
+  if (tools::file_ext(object$fileName) == 'txt' | tools::file_ext(object$fileName) == 'dic') {
     con <- file(filePath)
     writeLines(object$data, con)
     close(con)
   } else {
-    if (file_ext(object$fileName) == 'csv') {
+    if (tools::file_ext(object$fileName) == 'csv') {
       write.csv(x = object$data, file = filePath, row.names = FALSE)
     }
   }

@@ -19,6 +19,10 @@ sysData Internal data and data structures
 The function obtains the HC Corpora data from its online source if the
  document doesn't already exist
 }
+\seealso{
+Other data processing functions: \code{\link{cleanCorpus}},
+  \code{\link{cleanDocument}}
+}
 \author{
 John James, \email{j2sdatalab@gmail.com}
 }
