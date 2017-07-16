@@ -11,7 +11,6 @@
 #' to be tagged and returns an analysis of lexical features for the document.
 #'
 #' @param document - the document to tag in unlisted token format
-#' @param posTags - data frame of pos tags and descriptions
 #' @return analysis - analysis of lexical density for the file
 #'  \itemize{
 #'   \item{avgVc}{Numeric average coefficient of variation across all POS tags}
@@ -23,7 +22,7 @@
 #'  }
 #' @author John James, \email{j2sdatalab@@gmail.com}
 #' @export
-analyzeLexicalFeatures <- function(document, posTags) {
+analyzeLexicalFeatures <- function(document) {
 
   # Initialize Annotators
   sentAnnotator <- openNLP::Maxent_Sent_Token_Annotator()
@@ -34,7 +33,7 @@ analyzeLexicalFeatures <- function(document, posTags) {
   taggedChunks <- lapply(seq_along(document), function(x) {
     #    cat("\r......tagging chunk", x, "out of", length(document), "chunks                 ")
     tagChunk(document[[x]], x, sentAnnotator, wordAnnotator,
-             posAnnotator, posTags)
+             posAnnotator)
   })
 
   # Combine the list of long data frames into a single data frame for all chunks

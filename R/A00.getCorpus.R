@@ -1,6 +1,6 @@
 ## ---- get_data
 #==============================================================================#
-#                                 getCorpus                                      #
+#                                 getCorpus                                    #
 #==============================================================================#
 #'  getCorpus
 #'
@@ -24,7 +24,8 @@ getCorpus <- function(force = FALSE) {
   futile.logger::flog.logger("green", INFO, appender=appender.file('./log/green.log'))
   futile.logger::flog.logger("yellow", INFO, appender=appender.tee('./log/yellow.log'))
   futile.logger::flog.logger("red", INFO, appender=appender.tee('./log/red.log'))
-  futile.logger::flog.info("Obtaining raw data", name = 'green')
+  futile.logger::flog.info(paste("Entering function: getCorpus",
+                                 "Obtaining raw data"), name = 'green')
 
   # Download data
   if (dir.exists(corpora$raw$directory) &
@@ -42,7 +43,7 @@ getCorpus <- function(force = FALSE) {
 
   # Create log entry
   endTime <- Sys.time()
-  msg <- paste('HC Corpora obtained.',
+  msg <- paste('Exiting function: getCorpus. HC Corpora obtained.',
                'Elapsed time is',
                format(round(difftime(endTime, startTime,  units = 'auto'),
                             2)))

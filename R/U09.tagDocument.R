@@ -30,8 +30,8 @@ tagSentence <- function(sentence, sentAnnotator, wordAnnotator,
   a3 <- NLP::annotate(s, posAnnotator, a2)
 
   # Create Annotations
-  a2 <- annotate(s, list(sentAnnotator, wordAnnotator))
-  a3 <- annotate(s, posAnnotator, a2)
+  a2 <- NLP::annotate(s, list(sentAnnotator, wordAnnotator))
+  a3 <- NLP::annotate(s, posAnnotator, a2)
   a3w <- subset(a3, type == "word")
   tags <- sapply(a3w$features, `[[`, "POS")
   pairs <- sprintf("%s/%s", s[a3w], tags)
@@ -63,7 +63,8 @@ tagSentence <- function(sentence, sentAnnotator, wordAnnotator,
 #' @export
 tagDocument <- function(document) {
 
-  message(paste('...pos tagging', document$fileDesc))
+  futile.logger::flog.info(paste('...pos tagging', document$fileDesc), name = 'green')
+
 
   # Initialize Annotators
   sentAnnotator <- openNLP::Maxent_Sent_Token_Annotator()
@@ -80,8 +81,10 @@ tagDocument <- function(document) {
       remaining <- sentences - x
       timeMin <- round(remaining / rate, digits = 1)
       timeHrs <- round(timeMin / 60, digits = 1)
-      message(paste('......',x,'out of',sentences, 'sentences processed in',
-                    elapsed, 'minutes.', timeMin,'minutes remaining (', timeHrs, 'hours)'))
+      futile.logger::flog.info(paste('......',x,'out of',sentences,
+                                     'sentences processed in', elapsed, 'minutes.',
+                                     timeMin,'minutes remaining (', timeHrs, 'hours)'),
+                               name = 'green')
     }
 
     tagSentence(document$data[x], sentAnnotator, wordAnnotator,

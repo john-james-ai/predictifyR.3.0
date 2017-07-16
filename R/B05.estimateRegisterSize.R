@@ -62,7 +62,7 @@ estimateRegisterSize <- function(korpus, corpusSize,
 
     futile.logger::flog.info('...conducting POS analysis',
                              name = 'green')
-    posAnalysis <- analyzeLexicalFeatures(chunks, posTags)
+    posAnalysis <- analyzeLexicalFeatures(chunks)
     posAnalysis
   })
 

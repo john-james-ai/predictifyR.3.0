@@ -15,13 +15,12 @@
 #' @param sentAnnotator - the openNLP sentence annotator
 #' @param wordAnnotator - the openNLP word annotator
 #' @param posAnnotator - the openNLP POS annotator
-#' @param posTags - pos tags and descriptions
 #' @return tags - 1 row data frame with frequencies for each feature
 #' @author John James, \email{j2sdatalab@@gmail.com}
 #' @family POS Tagging Functions
 #' @export
 tagChunk <- function(chunk, chunkNum, sentAnnotator, wordAnnotator,
-                     posAnnotator, posTags) {
+                     posAnnotator) {
 
   textData <- NLP::as.String(chunk)
 

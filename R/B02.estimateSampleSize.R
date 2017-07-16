@@ -87,7 +87,7 @@ estimateSampleSize <- function(korpus, analysis) {
       eVoov <- vExt - vSample
 
       # Calculate estimated Noov
-      eNoov <- head(subset(extSpc, extSpc$Voov > eVoov, select = Noov)$Noov, 1)
+      eNoov <- max(0,head(subset(extSpc, extSpc$Voov > eVoov, select = Noov)$Noov, 1))
 
       # Calculate OOV Rate in percent
       oovRate <- eNoov / hcDocN * 100

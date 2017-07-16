@@ -38,7 +38,8 @@ estimateSamplingUnit <- function(korpus, sampleSizes = c(100, 500, 1000, 2000),
                                  numSamples = 30) {
 
   startTime <- Sys.time()
-  futile.logger::flog.info("Estimating sampling unit size",
+  futile.logger::flog.info(paste("Entering Function: estimateSamplingUnit.",
+                                 "Estimating sampling unit size"),
                            name = 'green')
 
   # Designate POS Tags to include in study
@@ -61,7 +62,7 @@ estimateSamplingUnit <- function(korpus, sampleSizes = c(100, 500, 1000, 2000),
       # Process Sample A
       sampleA <- sampleData(tokens[1:midway], numChunks = numSamples,
                             chunkSize = sampleSizes[s], format = 'lv')
-      distA <- data.table(analyzeLexicalFeatures(sampleA, posTags)$featureMatrix)
+      distA <- data.table(analyzeLexicalFeatures(sampleA)$featureMatrix)
       distA <- as.data.table(t(distA), keep.rownames = TRUE)
       setnames(distA, 'rn', 'Tag')
 
@@ -69,7 +70,7 @@ estimateSamplingUnit <- function(korpus, sampleSizes = c(100, 500, 1000, 2000),
       sampleB <- sampleData(tokens[(midway+1):length(tokens)],
                             numChunks = numSamples,
                             chunkSize = sampleSizes[s], format = 'lv')
-      distB <- data.table(analyzeLexicalFeatures(sampleB, posTags)$featureMatrix)
+      distB <- data.table(analyzeLexicalFeatures(sampleB)$featureMatrix)
       distB <- as.data.table(t(distB), keep.rownames = TRUE)
       setnames(distB, 'rn', 'Tag')
 
@@ -141,7 +142,8 @@ estimateSamplingUnit <- function(korpus, sampleSizes = c(100, 500, 1000, 2000),
 
   # Closing log
   endTime <- Sys.time()
-  futile.logger::flog.info(paste('Sampling unit estimates complete. Elapsed time is',
+  futile.logger::flog.info(paste('Exiting Function: estimateSamplingUnit",
+                                 "Sampling unit estimates complete. Elapsed time is',
                                  format(round(difftime(endTime, startTime,  units = 'auto'), 2))),
                            name = 'green')
 

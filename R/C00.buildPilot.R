@@ -13,7 +13,7 @@
 #' @param clean List with meta data for clean corpus
 #' @param pilot  List with meta data for pilot corpus
 #' @param design Dataframe containing the pilot corpus design
-#' @author John James
+#' @author John James, \email{j2sdatalab@@gmail.com}
 #' @export
 buildPilot <- function(clean, pilot, design) {
 
@@ -47,4 +47,3 @@ buildPilot <- function(clean, pilot, design) {
 
 }
 ## ---- end
-buildPilot(corpora$clean, corpora$pilot, design)

@@ -57,7 +57,7 @@ estimateCorpusSize <- function(korpus, sampleSize = 2000,
   # Prepare tag analysis
   futile.logger::flog.info("...conducting POS analysis",
                            name = 'green')
-  posAnalysis <- analyzeLexicalFeatures(chunks, posTags)
+  posAnalysis <- analyzeLexicalFeatures(chunks)
 
   # Corpus size estimate is the largest n not including rare tags (< 1%) of total tags
   wordsTagged <- sum(posAnalysis$featureStats$total)

@@ -66,8 +66,8 @@ testPackage <- function(prod = FALSE) {
     return(ss)
   }
 
-  testEstSamplingUnit <- function(clean, analysis) {
-    su <- estimateSamplingUnit(clean)
+  testEstSamplingUnit <- function(clean, sampleSizes) {
+    su <- estimateSamplingUnit(clean, sampleSizes)
     fileName <- paste0(sub('\\..*', '', paste0('')),
                        'sampling-unit-estimate-', clean$fileName,
                        format(Sys.time(),'_%Y%m%d_%H%M%S'), '.Rdata')
@@ -127,6 +127,39 @@ testPackage <- function(prod = FALSE) {
     buildPilot(clean, pilot, design)
   }
 
+  testTagging <- function(korpus) {
+    tagCorpus(korpus)
+  }
+
+  testNGramming <- function(korpus) {
+    nGrams <- nGramCorpus(korpus)
+    fileName <- paste0(sub('\\..*', '', paste0('')),
+                       'nGrams-for-', korpus$fileName,
+                       format(Sys.time(),'_%Y%m%d_%H%M%S'), '.Rdata')
+    objName <- 'nGrams'
+    logResults(nGrams, fileName, objName)
+  }
+
+  testVCheck <- function(clean, pilot) {
+    vCheck <- verifyVocabulary(clean, pilot)
+    fileName <- paste0(sub('\\..*', '', paste0('')),
+                       'vocabulary-check-for-', pilot$fileName,
+                       format(Sys.time(),'_%Y%m%d_%H%M%S'), '.Rdata')
+    objName <- 'vCheck'
+    logResults(vCheck, fileName, objName)
+  }
+
+  testVLinguistics <- function(clean, pilot) {
+    vLinguistics <- verifyLinguistics(clean, pilot, chunks = 10,
+                                      chunkSize = 200)
+    fileName <- paste0(sub('\\..*', '', paste0('')),
+                       'linquistics-check-for-', pilot$fileName,
+                       format(Sys.time(),'_%Y%m%d_%H%M%S'), '.Rdata')
+    objName <- 'vLinguistics'
+    logResults(vLinguistics, fileName, objName)
+  }
+
+
 
   # Core processing
   if (prod) {
@@ -136,18 +169,23 @@ testPackage <- function(prod = FALSE) {
   } else {
     raw <- corpora$test$raw
     clean <- corpora$test$clean
+    pilot <- corpora$test$pilot
   }
   futile.logger::flog.logger("green", INFO, appender=appender.tee('./log/green.log'))
-  testCleanCorpus(raw, clean)
-  analysis <<- testAnalyzeCorpus(clean)
+  # testCleanCorpus(raw, clean)
+  # analysis <<- testAnalyzeCorpus(clean)
   # vgcFast <<- testVGCFast(clean)
   # zipf <<- testZipf(clean, vgcFast)
   # ss <<- testEstSampleSize(clean, analysis)
-  # su <<- testEstSamplingUnit(clean, analysis)
+  # su <<- testEstSamplingUnit(clean, sampleSizes = c(100))
   # cs <<- testEstCorpusSize(clean)
   # rs <<- testEstRegisterSize(clean, cs, su)
   # design <<- testDesign(ss, rs, su, analysis)
   # testPilot(clean, pilot, design)
+  # testTagging(pilot)
+  # nGrams <- nGramCorpus(pilot)
+  # vCheck <- testVCheck(clean, pilot)
+  vLinguistics <- testVLinguistics(clean, pilot)
   futile.logger::flog.logger("green", INFO, appender=appender.file('./log/green.log'))
 }
 
