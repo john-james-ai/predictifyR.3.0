@@ -34,7 +34,7 @@
 #' @family sample size estimate functions
 #' @author John James, \email{j2sdatalab@@gmail.com}
 #' @export
-estimateSamplingUnit <- function(korpus, sampleSizes = c(500, 1000, 2000),
+estimateSamplingUnit <- function(korpus, sampleSizes = c(100, 500, 1000, 2000),
                                  numSamples = 30) {
 
   startTime <- Sys.time()
@@ -50,7 +50,7 @@ estimateSamplingUnit <- function(korpus, sampleSizes = c(500, 1000, 2000),
                              name = 'green')
 
     # Process corpus documents
-    scores <- rbindlist(lapply(seq_along(korpus$documents), function(x) {
+    scores <- data.table::rbindlist(lapply(seq_along(korpus$documents), function(x) {
       futile.logger::flog.info(paste('......processing',
                                      korpus$documents[[x]]$fileDesc),
                                name = 'green')
@@ -87,7 +87,7 @@ estimateSamplingUnit <- function(korpus, sampleSizes = c(500, 1000, 2000),
       distB[is.na(distB)] <- 0
 
       # Iterate through rows and run Chi-Sq Tests on distributions
-      x2 <- rbindlist(lapply(seq_along(1:nrow(distA)), function(d) {
+      x2 <- data.table::rbindlist(lapply(seq_along(1:nrow(distA)), function(d) {
         a <- as.vector(t(distA[d,-1]))
         b <- as.vector(t(distB[d,-1]))
         dist <- data.frame(a = a, b = b)

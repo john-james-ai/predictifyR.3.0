@@ -10,11 +10,12 @@
 #' file and returns the object to the calling environment.
 #'
 #' @param object List containing directory and filename
-#' @return fileData The csv, dic, or text data
+#' @param binary Logical. Read binary if TRUE
+#' @return fileData The csv, dic, bin, or text data
 #' @author John James, \email{j2sdatalab@@gmail.com}
 #' @family io functions
 #' @export
-readFile <- function(object) {
+readFile <- function(object, binary = FALSE) {
 
   directory <- object$directory
   fileName  <- object$fileName
@@ -36,7 +37,10 @@ readFile <- function(object) {
   on.exit(close(con))
 
   # Read file
-  if (tools::file_ext(fileName) == 'txt' | tools::file_ext(fileName) == 'dic') {
+  if (binary == TRUE) {
+    fileData <- readBin(file.path(directory, fileName),
+                        raw(), file.info(file.path(directory, fileName))$size)
+  } else  if (tools::file_ext(fileName) == 'txt' | tools::file_ext(fileName) == 'dic') {
     fileData <- readLines(con)
   } else if (tools::file_ext(file) == 'csv') {
       fileData <- read.csv(con, header = TRUE, stringsAsFactors = FALSE)

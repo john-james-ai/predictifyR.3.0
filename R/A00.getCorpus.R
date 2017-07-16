@@ -1,10 +1,10 @@
 ## ---- get_data
 #==============================================================================#
-#                                 getData                                      #
+#                                 getCorpus                                      #
 #==============================================================================#
-#'  getData
+#'  getCorpus
 #'
-#'  \code{getData} obtains the HC Corpora from the website
+#'  \code{getCorpus} obtains the HC Corpora from the website
 #'
 #'  The function obtains the HC Corpora data from its online source if the
 #'  document doesn't already exist
@@ -13,9 +13,9 @@
 #' @param force = Logical. Force download and overwrite local copy if TRUE
 #' @return sysData Internal data and data structures
 #' @author John James, \email{j2sdatalab@@gmail.com}
-#' @family data processing functions
+#' @family text processing functions
 #' @export
-getData <- function(force = FALSE) {
+getCorpus <- function(force = FALSE) {
 
   # Set time and log entry
   startTime <- Sys.time()

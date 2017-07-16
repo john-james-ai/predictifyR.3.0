@@ -27,7 +27,7 @@ This function takes as its parameters, the the vocabulary based sample size
 estimate from \code{\link{estimateSampleSize}}, the register size estimates
 from \code{\link{estimateRegisterSize}}, the sampling unit estimate
 from \code{\link{estimateSamplingUnit}}, and the clean data analysis from
-\code{\link{analyzeData}}, and produces the model corpora design including
+\code{\link{analyzeCorpus}}, and produces the model corpora design including
 sizes for four training sets, a validation set and a test set.
 }
 \author{

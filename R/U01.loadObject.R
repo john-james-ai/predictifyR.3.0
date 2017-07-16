@@ -31,7 +31,10 @@ loadObject <- function(object) {
     object <- load(filePath, envir = env)
     return(env[[object]])
   } else {
-    return(FALSE)
+    futile.logger::flog.error(paste('Error in loadObject.
+                     File', file.path(directory, fileName), 'does not exist.'),
+                              name = 'red')
+    stop()
   }
 }
 ## ---- end

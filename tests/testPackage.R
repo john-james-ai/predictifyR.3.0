@@ -8,19 +8,18 @@
 #' This function takes as its parameter, the meta data for the raw and clean
 #' corpora and runs the analysis pipeline and logs the results.
 #'
-#' @param raw List containing meta data for raw corpus
-#' @param clean List containing meta data for clean corpus
+#' @param prod Logical indicating whether to use production data vs. test
 #' @author John James, \email{j2sdatalab@@gmail.com}
-testPackage <- function(raw, clean) {
+testPackage <- function(prod = FALSE) {
 
   testCleanCorpus <- function(raw, clean) {
     cleanCorpus(raw, clean)
   }
 
-  testAnalyzeData <- function(clean) {
-    analysis <- analyzeData(clean)
+  testAnalyzeCorpus <- function(clean) {
+    analysis <- analyzeCorpus(clean)
     fileName <- paste0(sub('\\..*', '', paste0('')),
-                       'clean-data-analysis-', clean$fileName,
+                       'clean-corpus-analysis-', clean$fileName,
                        format(Sys.time(),'_%Y%m%d_%H%M%S'), '.Rdata')
     objName <- 'analysis'
     logResults(analysis, fileName, objName)
@@ -124,19 +123,33 @@ testPackage <- function(raw, clean) {
     return(design)
   }
 
+  testPilot <- function(clean, pilot, design) {
+    buildPilot(clean, pilot, design)
+  }
 
 
   # Core processing
-  futile.logger::flog.logger("green", threshold=INFO, appender=appender.tee('./log/green.log'))
-  analysis <<- testAnalyzeData(clean)
-  vgcFast <<- testVGCFast(clean)
-  zipf <<- testZipf(clean, vgcFast)
-  ss <<- testEstSampleSize(clean, analysis)
-  su <<- testEstSamplingUnit(clean, analysis)
-  cs <<- testEstCorpusSize(clean)
-  rs <<- testEstRegisterSize(clean, cs, su)
-  design <<- testDesign(ss, rs, su, analysis)
+  if (prod) {
+    raw <- corpora$raw
+    clean <- corpora$clean
+    pilot <- corpora$pilot
+  } else {
+    raw <- corpora$test$raw
+    clean <- corpora$test$clean
+  }
+  futile.logger::flog.logger("green", INFO, appender=appender.tee('./log/green.log'))
+  testCleanCorpus(raw, clean)
+  analysis <<- testAnalyzeCorpus(clean)
+  # vgcFast <<- testVGCFast(clean)
+  # zipf <<- testZipf(clean, vgcFast)
+  # ss <<- testEstSampleSize(clean, analysis)
+  # su <<- testEstSamplingUnit(clean, analysis)
+  # cs <<- testEstCorpusSize(clean)
+  # rs <<- testEstRegisterSize(clean, cs, su)
+  # design <<- testDesign(ss, rs, su, analysis)
+  # testPilot(clean, pilot, design)
   futile.logger::flog.logger("green", INFO, appender=appender.file('./log/green.log'))
 }
 
-testPackage(corpora$raw, corpora$clean)
+testPackage()
+

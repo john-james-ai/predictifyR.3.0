@@ -38,13 +38,13 @@ analyzeLexicalFeatures <- function(document, posTags) {
   })
 
   # Combine the list of long data frames into a single data frame for all chunks
-  chunkMatrix <- rbindlist(lapply(seq_along(taggedChunks), function(x) {
+  chunkMatrix <- data.table::rbindlist(lapply(seq_along(taggedChunks), function(x) {
     taggedChunks[[x]]$tagsTableLong
   }))
   chunkMatrix[is.na(chunkMatrix)] <- 0
 
   # Combine the list of wide data frames into a single data frame for all chunks
-  featureMatrix <- rbindlist(lapply(seq_along(taggedChunks), function(x) {
+  featureMatrix <- data.table::rbindlist(lapply(seq_along(taggedChunks), function(x) {
     taggedChunks[[x]]$tagsTableWide
   }), fill = TRUE)
   featureMatrix[is.na(featureMatrix)] <- 0
@@ -56,7 +56,7 @@ analyzeLexicalFeatures <- function(document, posTags) {
 
   # Calculate descriptive statistics and sample sizes
   features <- names(featureMatrix)
-  featureStats <- rbindlist(lapply(seq_along(featureMatrix), function(x) {
+  featureStats <- data.table::rbindlist(lapply(seq_along(featureMatrix), function(x) {
     min <- min(as.numeric(as.character(featureMatrix[[x]])),na.rm=TRUE)
     max <- max(as.numeric(as.character(featureMatrix[[x]])),na.rm=TRUE)
     mean <- mean(as.numeric(as.character(featureMatrix[[x]])),na.rm=TRUE)

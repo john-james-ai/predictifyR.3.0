@@ -32,14 +32,15 @@ estimateSampleSize <- function(korpus, analysis) {
   sampleSizes <- c(.1,.5,1,3,5,10,15)
 
   # Iterate through registers, samples sizes, and coverages
-  coverage <- rbindlist(lapply(seq_along(korpus$documents), function(d) {
+  coverage <- data.table::rbindlist(lapply(seq_along(korpus$documents), function(d) {
     futile.logger::flog.info(paste("...processing",korpus$documents[[d]]$fileDesc),
                              name = 'green')
 
     document <- readFile(korpus$documents[[d]])
     tokens <- unlist(quanteda::tokenize(document, what = 'word'))
 
-    # Create spectrum objects
+    # Create spectrum objects.  A frequency spectrum lists the number of unique
+    # that occur once, twice, thrice, and so on.
     hcDocSpc  <- languageR::text2spc.fnc(tokens)
     hcDocSpc$m  <- as.integer(hcDocSpc$m)
     hcDocSpc$Vm <- as.integer(hcDocSpc$Vm)
@@ -49,16 +50,16 @@ estimateSampleSize <- function(korpus, analysis) {
     hcDocSpc$Noov <- cumsum(hcDocSpc$Vm * hcDocSpc$m)
 
     # Iterate through sample sizes
-    registerAnalysis <- rbindlist(lapply(seq_along(sampleSizes), function(s) {
+    registerAnalysis <- data.table::rbindlist(lapply(seq_along(sampleSizes), function(s) {
       futile.logger::flog.info(paste("......processing",sampleSizes[s], '% of document'),
                                name = 'green')
 
-      # Sample document
+      # Sample the document according to the sampleSizes variable
       numSamples <- floor(hcDocN * sampleSizes[s] / 100)
       sampleSize <- 1
       sampleDoc <- sampleData(tokens, numChunks = numSamples, chunkSize = sampleSize, format = 'v')
 
-      # Create sample document observed spectrum object
+      # Create sample document observed spectrum object.
       sampleDocSpc    <- languageR::text2spc.fnc(sampleDoc)
       sampleDocSpc$m  <- as.integer(sampleDocSpc$m)
       sampleDocSpc$Vm <- as.integer(sampleDocSpc$Vm)
@@ -67,19 +68,22 @@ estimateSampleSize <- function(korpus, analysis) {
       vSample <- zipfR::V(sampleDocSpc)
 
       # Train ZM model on sample data.
-      docLnre <- zipfR::lnre('zm', spc = sampleDocSpc, cost = 'chisq', method = 'Custom', exact  = FALSE)
+      docLnre <- zipfR::lnre('zm', spc = sampleDocSpc, cost = 'chisq',
+                             method = 'Custom', exact  = FALSE)
 
-      # Extrapolate spectrum for zm model out to sizes of original document
+      # Extrapolate spectrum for zm model out to the size N of the
+      # original document
       extSpc <- zipfR::lnre.spc(docLnre, hcDocN, m.max = nrow(hcDocSpc))
       extSpc$m  <- as.integer(extSpc$m)
       extSpc$Vm <- as.integer(extSpc$Vm)
       extSpc$Voov <- cumsum(extSpc$Vm)
       extSpc$Noov <- cumsum(extSpc$Vm * extSpc$m)
 
-      # Extrapolate out to size of original document and return vocabulary size
+      # Return the expected vocabulary size at N
       vExt <- zipfR::EV(docLnre, hcDocN)
 
-      # Calculate estimated Voov vis-a-vis vocabulary calculated from observed spectrum.
+      # Calculate estimated Voov vis-a-vis vocabulary calculated
+      # from observed spectrum.
       eVoov <- vExt - vSample
 
       # Calculate estimated Noov
@@ -116,7 +120,7 @@ estimateSampleSize <- function(korpus, analysis) {
 
   # Format Summary Row
   register <- 'Corpus'
-  percent <- sum(ss$size) / analysis$tokens[4]
+  percent <- sum(ss$size) / analysis$tokens[4] * 100
   size <- sum(ss$size)
   vSample <- sum(ss$vSample)
   vExt <- sum(ss$vExt)

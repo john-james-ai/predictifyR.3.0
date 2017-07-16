@@ -76,7 +76,7 @@ estimateRegisterSize <- function(korpus, corpusSize,
     })))
   lambda <- round(pool / sumAvgVc, digits = 0)
 
-  registerSize <- rbindlist(lapply(seq_along(posAnalysis), function(x) {
+  registerSize <- data.table::rbindlist(lapply(seq_along(posAnalysis), function(x) {
     register <- registers[[x]]$fileDesc
     avgVc <- posAnalysis[[x]]$avgVc
     proportion <- round(avgVc * lambda, digits = 0)

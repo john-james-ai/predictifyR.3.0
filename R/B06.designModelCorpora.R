@@ -10,7 +10,7 @@
 #' estimate from \code{\link{estimateSampleSize}}, the register size estimates
 #' from \code{\link{estimateRegisterSize}}, the sampling unit estimate
 #' from \code{\link{estimateSamplingUnit}}, and the clean data analysis from
-#' \code{\link{analyzeData}}, and produces the model corpora design including
+#' \code{\link{analyzeCorpus}}, and produces the model corpora design including
 #' sizes for four training sets, a validation set and a test set.
 #'
 #' @param sampleSizeEstimate - the vocabulary-based estimate
@@ -60,40 +60,46 @@ designModelCorpora <- function(sampleSizeEstimate, registerSizeEstimate,
   extrapolated <- pctTotal / pctTotal[4] * 5
   extrapolatedTokens <- hcTokens * extrapolated / 100
   extrapolatedSents <- floor(extrapolatedTokens / analysis$wordsPerSent)
-  chunkSize <- rep(samplingUnit[[length(samplingUnit)]]$size, 4)
-  sentsPerChunk <- floor(samplingUnit[[length(samplingUnit)]]$size /
-                           analysis$wordsPerSent)
-  chunks <- floor(extrapolatedSents / sentsPerChunk)
-  sampleSize <- chunks * sentsPerChunk
+  wordsPerSent <- analysis$wordsPerSent[1:4]
+  wordsPerChunk <- rep(samplingUnit[[length(samplingUnit)]]$size, 4)
+  chunks <- floor(extrapolatedTokens / wordsPerChunk)
+  sampleWords <- chunks * wordsPerChunk
+  sampleSents <- round(sampleWords / wordsPerSent, 0)
 
   pilot <- data.frame(register = register, hcTokens = hcTokens,
                       extrapolated = extrapolated,
                       extrapolatedTokens = extrapolatedTokens,
                       extrapolatedSents = extrapolatedSents,
-                      chunkSize = chunkSize,
-                      sentsPerChunk = sentsPerChunk,
+                      wordsPerSent = wordsPerSent,
+                      wordsPerChunk = wordsPerChunk,
                       chunks = chunks,
-                      sampleSize = sampleSize)
+                      sampleWords = sampleWords,
+                      sampleSents = sampleSents)
   names(pilot) <- c('Register', 'HC Corpus (Tokens)',
-                    '% Total', 'Tokens', 'Sentences',
-                    'Chunk Size (Tokens)',
-                    'Sentences per Chunk', '# Chunks',
+                    '% Total', 'Words', 'Sentences',
+                    'Words per Sentence',
+                    'Words per Chunk',
+                     '# Chunks',
+                    'Sample Size (Words)',
                     'Sample Size (Sentences)')
 
   #---------------------------------------------------------------------------#
   #           Compute Model Corpora (Train, Validation, Test) Sizes           #
   #---------------------------------------------------------------------------#
   # Compute training, validation and test set sizes
-  Registers <- c('Blogs', 'News', 'Twitter', 'Corpus')
-  Validation <- pilot$`Sample Size (Sentences)`[1:3]
-  Test <- pilot$`Sample Size (Sentences)`[1:3]
-  Alpha <-  pilot$`Sample Size (Sentences)`[1:3] * 2
-  Beta <-  pilot$`Sample Size (Sentences)`[1:3] * c(5,2,5)
-  Gamma <-  pilot$`Sample Size (Sentences)`[1:3] * c(10,2,10)
-  Delta <-  pilot$`Sample Size (Sentences)`[1:3] * c(14,2,14)
-  corpusDesign <- data.frame(Alpha, Beta, Gamma, Delta, Validation, Test)
+  Registers <- c('Blogs', 'News', 'Twitter', 'Corpus', '%')
+  Total <- analysis$tokens[1:3]
+  Validation <- pilot$`Sample Size (Sentences)`[1:3] * analysis$wordsPerSent[1:3]
+  Test <- pilot$`Sample Size (Sentences)`[1:3] * analysis$wordsPerSent[1:3]
+  Alpha <-  pilot$`Sample Size (Sentences)`[1:3] * 4 * analysis$wordsPerSent[1:3]
+  Beta <-  pilot$`Sample Size (Sentences)`[1:3] * 6 * analysis$wordsPerSent[1:3]
+  Gamma <-  pilot$`Sample Size (Sentences)`[1:3] * 9 * analysis$wordsPerSent[1:3]
+  Delta <-  pilot$`Sample Size (Sentences)`[1:3] * 18 * analysis$wordsPerSent[1:3]
+  corpusDesign <- data.frame(Total, Alpha, Beta, Gamma, Delta, Validation, Test)
   ttl <- colSums(corpusDesign)
   corpusDesign <- rbind(corpusDesign, ttl)
+  percent <- round(corpusDesign[4,] / corpusDesign[4,1] * 100, 0)
+  corpusDesign <- rbind(corpusDesign, percent)
   corpusDesign <- as.data.frame(cbind(Registers, corpusDesign), stringsAsFactors=FALSE)
 
   # Format results

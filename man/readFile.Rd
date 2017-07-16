@@ -4,13 +4,15 @@
 \alias{readFile}
 \title{readFile}
 \usage{
-readFile(object)
+readFile(object, binary = FALSE)
 }
 \arguments{
 \item{object}{List containing directory and filename}
+
+\item{binary}{Logical. Read binary if TRUE}
 }
 \value{
-fileData The csv, dic, or text data
+fileData The csv, dic, bin, or text data
 }
 \description{
 \code{readFile} reads a csv, dic, or text file into memory

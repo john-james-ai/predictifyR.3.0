@@ -4,7 +4,7 @@
 \alias{estimateSamplingUnit}
 \title{estimateSamplingUnit}
 \usage{
-estimateSamplingUnit(korpus, sampleSizes = c(500, 1000, 2000),
+estimateSamplingUnit(korpus, sampleSizes = c(100, 500, 1000, 2000),
   numSamples = 30)
 }
 \arguments{

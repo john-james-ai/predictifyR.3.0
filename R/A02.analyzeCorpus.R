@@ -13,8 +13,7 @@
 #' @param document The document content to be analyzed
 #' @return stats A list containing descriptive statistics
 #' @author John James, \email{j2sdatalab@@gmail.com}
-#' @seealso
-#'   \code{\link[quanteda]{tokenize}}
+#' @family text processing functions
 #' @export
 getStats <- function(document) {
 
@@ -59,6 +58,7 @@ getStats <- function(document) {
 #' @param stats The descriptive stats for the three registers.
 #' @return totals A data frame of descriptive statistics and totals
 #' @author John James, \email{j2sdatalab@@gmail.com}
+#' @family text processing functions
 #' @export
 summarizeAnalysis <- function(korpus, stats) {
 
@@ -95,11 +95,11 @@ summarizeAnalysis <- function(korpus, stats) {
 
 }
 #==============================================================================#
-#                              analyzeData                                     #
+#                              analyzeCorpus                                     #
 #==============================================================================#
-#'  analyzeData
+#'  analyzeCorpus
 #'
-#'  \code{analyzeData} summarizes descriptive statistics fora corpus
+#'  \code{analyzeCorpus} summarizes descriptive statistics fora corpus
 #'
 #' This function takes as its parameters, the type of analysis (full or fast),
 #' and the meta data for the corpus
@@ -107,8 +107,9 @@ summarizeAnalysis <- function(korpus, stats) {
 #' @param korpus - the meta data for the corpora to be analyzed
 #' @return analysis - data frame of descriptive statistics
 #' @author John James, \email{j2sdatalab@@gmail.com}
+#' @family text processing functions
 #' @export
-analyzeData <- function(korpus) {
+analyzeCorpus <- function(korpus) {
 
   startTime <- Sys.time()
 
@@ -124,7 +125,7 @@ analyzeData <- function(korpus) {
   })
 
   # Inspect Individual Corpus Files
-  stats <- rbindlist(lapply(seq_along(documents),function(x) {
+  stats <- data.table::rbindlist(lapply(seq_along(documents),function(x) {
     futile.logger::flog.info(paste("...analyzing", korpus$documents[[x]]$fileDesc), name = 'green')
     getStats(documents[[x]])
   }))
