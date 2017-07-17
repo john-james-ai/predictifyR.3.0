@@ -22,5 +22,5 @@ pilot corpora, and the pilot corpus design and  creates a pilot corpus
 according to the design and stores it for downsream analysis.
 }
 \author{
-John James
+John James, \email{j2sdatalab@gmail.com}
 }

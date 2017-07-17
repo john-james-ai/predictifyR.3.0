@@ -62,6 +62,7 @@ designModelCorpora <- function(sampleSizeEstimate, registerSizeEstimate,
   extrapolatedSents <- floor(extrapolatedTokens / analysis$wordsPerSent)
   wordsPerSent <- analysis$wordsPerSent[1:4]
   wordsPerChunk <- rep(samplingUnit[[length(samplingUnit)]]$size, 4)
+  sentsPerChunk <- floor(wordsPerChunk / wordsPerSent)
   chunks <- floor(extrapolatedTokens / wordsPerChunk)
   sampleWords <- chunks * wordsPerChunk
   sampleSents <- round(sampleWords / wordsPerSent, 0)
@@ -72,6 +73,7 @@ designModelCorpora <- function(sampleSizeEstimate, registerSizeEstimate,
                       extrapolatedSents = extrapolatedSents,
                       wordsPerSent = wordsPerSent,
                       wordsPerChunk = wordsPerChunk,
+                      sentsPerChunk = sentsPerChunk,
                       chunks = chunks,
                       sampleWords = sampleWords,
                       sampleSents = sampleSents)
@@ -79,6 +81,7 @@ designModelCorpora <- function(sampleSizeEstimate, registerSizeEstimate,
                     '% Total', 'Words', 'Sentences',
                     'Words per Sentence',
                     'Words per Chunk',
+                    'Sentences per Chunk',
                      '# Chunks',
                     'Sample Size (Words)',
                     'Sample Size (Sentences)')

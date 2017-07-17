@@ -4,12 +4,10 @@
 \alias{analyzeLexicalFeatures}
 \title{analyzeLexicalFeatures}
 \usage{
-analyzeLexicalFeatures(document, posTags)
+analyzeLexicalFeatures(document)
 }
 \arguments{
 \item{document}{- the document to tag in unlisted token format}
-
-\item{posTags}{- data frame of pos tags and descriptions}
 }
 \value{
 analysis - analysis of lexical density for the file

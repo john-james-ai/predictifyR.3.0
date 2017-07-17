@@ -26,6 +26,15 @@ Depends:
 	  futile.logger
 RoxygenNote: 6.0.1
 Imports:
+  assertive.base,
+  assertive.code,
+  assertive.data,
+  assertive.files,
+  assertive.numbers,
+  assertive.properties,
+  assertive.strings,
+  assertive.types,
+  dplyr,
 	doParallel,
 	fastmatch,
 	ggplot2,

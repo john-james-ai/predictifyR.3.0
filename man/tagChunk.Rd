@@ -4,7 +4,7 @@
 \alias{tagChunk}
 \title{tagChunk}
 \usage{
-tagChunk(chunk, chunkNum, sentAnnotator, wordAnnotator, posAnnotator, posTags)
+tagChunk(chunk, chunkNum, sentAnnotator, wordAnnotator, posAnnotator)
 }
 \arguments{
 \item{chunk}{- a chunk (list) of text to be tagged}
@@ -16,8 +16,6 @@ tagChunk(chunk, chunkNum, sentAnnotator, wordAnnotator, posAnnotator, posTags)
 \item{wordAnnotator}{- the openNLP word annotator}
 
 \item{posAnnotator}{- the openNLP POS annotator}
-
-\item{posTags}{- pos tags and descriptions}
 }
 \value{
 tags - 1 row data frame with frequencies for each feature

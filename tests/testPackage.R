@@ -159,6 +159,11 @@ testPackage <- function(prod = FALSE) {
     logResults(vLinguistics, fileName, objName)
   }
 
+  testCorporaBuild <- function(design, clean, training, validation, test) {
+    buildCorpora(design, clean, training, validation, test)
+    analyze()
+  }
+
 
 
   # Core processing
@@ -173,19 +178,19 @@ testPackage <- function(prod = FALSE) {
   }
   futile.logger::flog.logger("green", INFO, appender=appender.tee('./log/green.log'))
   # testCleanCorpus(raw, clean)
-  # analysis <<- testAnalyzeCorpus(clean)
+  analysis <<- testAnalyzeCorpus(clean)
   # vgcFast <<- testVGCFast(clean)
   # zipf <<- testZipf(clean, vgcFast)
-  # ss <<- testEstSampleSize(clean, analysis)
-  # su <<- testEstSamplingUnit(clean, sampleSizes = c(100))
-  # cs <<- testEstCorpusSize(clean)
-  # rs <<- testEstRegisterSize(clean, cs, su)
-  # design <<- testDesign(ss, rs, su, analysis)
+  ss <<- testEstSampleSize(clean, analysis)
+  su <<- testEstSamplingUnit(clean, sampleSizes = c(100))
+  cs <<- testEstCorpusSize(clean)
+  rs <<- testEstRegisterSize(clean, cs, su)
+  design <<- testDesign(ss, rs, su, analysis)
   # testPilot(clean, pilot, design)
   # testTagging(pilot)
   # nGrams <- nGramCorpus(pilot)
   # vCheck <- testVCheck(clean, pilot)
-  vLinguistics <- testVLinguistics(clean, pilot)
+  # vLinguistics <- testVLinguistics(clean, pilot)
   futile.logger::flog.logger("green", INFO, appender=appender.file('./log/green.log'))
 }
 

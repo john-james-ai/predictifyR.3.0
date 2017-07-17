@@ -143,7 +143,7 @@ estimateSamplingUnit <- function(korpus, sampleSizes = c(100, 500, 1000, 2000),
   # Closing log
   endTime <- Sys.time()
   futile.logger::flog.info(paste('Exiting Function: estimateSamplingUnit",
-                                 "Sampling unit estimates complete. Elapsed time is',
+                                 "Elapsed time is',
                                  format(round(difftime(endTime, startTime,  units = 'auto'), 2))),
                            name = 'green')
 
