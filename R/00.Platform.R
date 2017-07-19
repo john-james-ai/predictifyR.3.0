@@ -1,110 +1,142 @@
-Platform <- R6Class ("Platform",
+Platform = R6::R6Class("Platform",
  private = list(
-   ..environments = data.frame()
+   ..name = character(0),
+   ..desc = character(0),
+   ..currentEnv = NULL,
+   ..environments = data.frame(),
+   ..created = character(0)
  ),
- public = list(
-   initialize = function(environment) {
 
-     # Validate parameters
-     assertive.types::is_list(environment)
-     assertive.properties::is_non_empty(environment$name)
-     assertive.properties::is_non_empty(environment$desc)
-     assertive.types::assert_is_character(environment$name)
-     assertive.types::assert_is_character(environment$desc)
-     assertive.files::is_dir(environment$path)
-
-     # Initialize Platform with environment and set current
-     environment$current = TRUE
-     environment$created = Sys.time()
-     private$..environments = rbindlist(list(environment))
-     invisible(self)
-   },
-
-   existsEnv = function(env) {
-     if (nrow(subset(private$..environments, private$..environments$name == env)) == 0) {
-       return(FALSE)
-     } else {
-       return(TRUE)
-     }
-   },
-
-   addEnv = function(environment, makeCurrent) {
-
-     if (!self$existsEnv(environment$name)) {
-
-       # Validate parameters
-       assertive.types::is_list(environment)
-       assertive.properties::is_non_empty(environment$name)
-       assertive.properties::is_non_empty(environment$desc)
-       assertive.types::assert_is_character(environment$name)
-       assertive.types::assert_is_character(environment$desc)
-       assertive.files::is_dir(environment$path)
-
-       # Add environment to list of environments and set current
-       if (makeCurrent == TRUE) {
-         private$..environments$current = FALSE
-         environment$current = TRUE
-       } else {
-         environment$current = FALSE
-       }
-
-       environment$created = Sys.time()
-       env = rbindlist(list(environment))
-       private$..environments = rbind(private$..environments, env)
-       invisible(self)
-
-     } else {
-       futile.logger::flog.warn(paste(environment$name,"already exists"),
-                                name = 'yellow')
-     }
-   },
-
-   getEnvs = function() {
-     private$..environments
-   },
-
-   archiveEnv = function(env) {
-
-     if (self$existsEnv(env) == TRUE) {
-
-       # Create archive environment from named environment
-       e <- subset(private$..environments, private$..environments$name == env)
-       archive <- e
-       archive$name = paste0(sub('\\..*', '', paste0(env)),
-                             format(Sys.time(),'_%Y%m%d_%H%M%S'))
-
-       archive$desc = paste(sub('\\..*', '', paste0('Archived ',e$desc)),
-                             format(Sys.time(),'%Y%m%d_%H%M%S'))
-       archive$path = file.path('./archive', archive$name)
-       self$addEnv(archive, makeCurrent = FALSE)
-
-       # Copy data to archive
-       base::dir.create(archive$path, recursive = TRUE)
-       base::file.copy(e$path, archive$path, recursive=TRUE)
-
-     } else {
-       futile.logger::flog.warn(paste(name,"is not a valid environment"),
-                                name = 'yellow')
-     }
-   }
-
- ),
  active = list(
    currentEnv = function(value) {
      if (missing(value)) {
-       return(subset(private$..environments,
-                     private$..environments$current == TRUE))
-     } else {
-       if (self$existsEnv(value) == TRUE) {
-         private$..environments$current = FALSE
-         private$..environments = within(private$..environments,
-                                         current[name == value] <- TRUE)
+       private$..currentEnv
        } else {
-         futile.logger::flog.warn(paste(value,"is not a valid environment"),
-                                        name = 'yellow')
+         # Validate
+         assertive.types::is_character(value)
+         if (nrow(subset(private$..environments, name == value)) == 0) {
+           futile.logger::flog.error(paste(
+             "Error in currentEnv. Invalid environment."),
+             name = 'red')
+         } else {
+           private$..environments$current <- FALSE
+           private$..environments$current[private$..environments$name == value] <- TRUE
+         }
+       }
+   }
+ ),
+
+ public = list(
+   initialize = function(name, desc) {
+
+     # Check if exists
+     check <- mget(name, inherits = TRUE, ifnotfound = list('Platform not found'))
+     if (!grepl('not found', check[[1]], perl = TRUE)) {
+       futile.logger::flog.warn(paste0(
+         "Platform ", name, " already exists.  Choose another name or access ",
+         name," by using ", name, ".method notation."),
+         name = 'yellow')
+     } else {
+
+       # Validate
+       assertive.types::is_character(name)
+       assertive.types::is_character(desc)
+
+       # Create initial environment
+       envName <- 'main'
+       envDesc <- paste(name,' main environment')
+       envPath <- file.path('main')
+       env <- Environment$new(envName, envDesc, envPath)
+
+       # Instantiate platform
+       private$..name <- name
+       private$..desc <- desc
+       private$..currentEnv <- envName
+       private$..environments <- data.frame(Name = envName,
+                                           Desc = envDesc,
+                                           Path = envPath,
+                                           Current = TRUE,
+                                           Created = Sys.time())
+       private$..created <- Sys.time()
+     }
+   },
+
+   printPlatform = function() {
+
+     cat(paste('\nPlatform Name: '), private$..name)
+     cat(paste('\nPlatform Description: '), private$..desc)
+     cat(paste('\nCurrent Environment: '), private$..currentEnv)
+     cat(paste('\nCreated: '), as.character(
+       as.POSIXct(private$..created, origin="1970-01-01"), usetz=T), '\n\n')
+   },
+
+   createEnv = function(name, desc, path, current){
+
+     # Validate
+     assertive.types::is_character(name)
+     assertive.types::is_character(desc)
+     assertive.types::is_character(path)
+     assertive.types::is_a_bool(current)
+
+     # Create initial environment
+     Environment$new(name, desc, path)
+
+     # Update current environment if current = TRUE
+     if (current == TRUE) {
+       private$..environments$Current = FALSE
+     }
+     env <- list()
+     env$Name <-  name
+     env$Desc <- desc
+     env$Path <- path
+     env$Current <- current
+     env$Created <- Sys.time()
+     private$..environments <- rbind(private$..environments, rbindlist(list(env)))
+     invisible(self)
+   },
+
+   archiveEnv = function(envName) {
+
+     e <- subset(private$..environments, private$..environments$name == envName)
+     name <- paste0(sub('\\..*', '', paste0(e$Name)),
+                            format(Sys.time(),'_%Y%m%d_%H%M%S'))
+
+     desc <- paste(sub('\\..*', '', paste0('Archived ',e$Desc)),
+                           format(Sys.time(),'%Y%m%d_%H%M%S'))
+     path <- e$Path
+     current = FALSE
+
+     self$createEnv(name, desc, path, current)
+
+     # Copy data to archive
+     base::dir.create(file.path('./archive', e$path), recursive = TRUE)
+     base::file.copy(file.path('environments',e$Path),
+                     file.path('./archive', e$Path), recursive = TRUE)
+
+   },
+
+   existsEnv = function(envName = NULL) {
+
+     if (length(envName) == 0) {
+       futile.logger::flog.warn(paste(
+         'Error in existsEnv.', 'No environment entered'),
+         name = 'yellow')
+     } else {
+
+       if (nrow(private$..environments) == 0) {
+         return(FALSE)
+       } else if (nrow(subset(private$..environments,
+                              private$..environments$Name == envName)) == 0) {
+         return(FALSE)
+       } else {
+         return(TRUE)
        }
      }
-   }
+   },
+
+   listEnv = function() {
+       private$..environments
+     }
  ),
  lock_objects = FALSE
 )
