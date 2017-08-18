@@ -44,7 +44,7 @@
 #'
 #' @param rawDocument - the meta data and content for the file to be analyzed
 #' @return cleanDocument Cleaned text document in unlisted vector format.
-#' @author John James, \email{j2sdatalab@@gmail.com}
+#' @author John James, \email{jjames@@datasciencestudio.org}
 #' @family text processing functions
 #' @export
 cleanDocument <- function(rawDocument) {
@@ -120,7 +120,7 @@ cleanDocument <- function(rawDocument) {
 #'
 #' @param raw - the meta data for the reshaped raw corpus
 #' @param clean - the meta data for the clean corpus
-#' @author John James, \email{j2sdatalab@@gmail.com}
+#' @author John James, \email{jjames@@datasciencestudio.org}
 #' @family text processing functions
 #' @export
 cleanCorpus <- function(raw, clean) {

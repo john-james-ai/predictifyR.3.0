@@ -12,7 +12,7 @@
 #'
 #' @param force = Logical. Force download and overwrite local copy if TRUE
 #' @return sysData Internal data and data structures
-#' @author John James, \email{j2sdatalab@@gmail.com}
+#' @author John James, \email{jjames@@datasciencestudio.org}
 #' @family text processing functions
 #' @export
 getCorpus <- function(force = FALSE) {

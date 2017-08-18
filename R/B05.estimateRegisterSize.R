@@ -31,7 +31,7 @@
 #' \item{Sample Size}{Integer = Num Samples * Sample Length}
 #'}
 #' @family sample size estimate functions
-#' @author John James, \email{j2sdatalab@@gmail.com}
+#' @author John James, \email{jjames@@datasciencestudio.org}
 #' @export
 estimateRegisterSize <- function(korpus, corpusSize,
                                  samplingUnit, sampleSize = 2000,

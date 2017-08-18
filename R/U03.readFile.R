@@ -12,7 +12,7 @@
 #' @param object List containing directory and filename
 #' @param binary Logical. Read binary if TRUE
 #' @return fileData The csv, dic, bin, or text data
-#' @author John James, \email{j2sdatalab@@gmail.com}
+#' @author John James, \email{jjames@@datasciencestudio.org}
 #' @family io functions
 #' @export
 readFile <- function(object, binary = FALSE) {

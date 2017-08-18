@@ -16,7 +16,7 @@
 #' @param type - c('fast', 'full')
 #' @param samples - the number of rows in the growth document
 #' @return vgc - vocabulary growth curve data
-#' @author John James, \email{j2sdatalab@@gmail.com}
+#' @author John James, \email{jjames@@datasciencestudio.org}
 #' @family vocabulary growth functions
 #' @seealso
 #'  \code{\link{createVGC}}
@@ -72,7 +72,7 @@ createGrowthObject <- function(document, type = 'fast', samples = 1000) {
 #' @param korpus - the meta data for the korpus being analyzed
 #' @param type = c('fast', 'full)
 #' @return growth - list of growth objects
-#' @author John James, \email{j2sdatalab@@gmail.com}
+#' @author John James, \email{jjames@@datasciencestudio.org}
 #' @family vocabulary growth functions
 #' @export
 createVGC <- function(korpus, type = 'fast') {

@@ -12,7 +12,7 @@
 #' @param korpus - the meta data for the HC Corpus
 #' @param analysis - the analysis of the HC Corpus
 #' @return estimate - list of data frames containing coverage estimates
-#' @author John James, \email{j2sdatalab@@gmail.com}
+#' @author John James, \email{jjames@@datasciencestudio.org}
 #' @seealso
 #'   \code{\link[languageR]{text2spc.fnc}}
 #'   \code{\link[zipfR]{lnre}}

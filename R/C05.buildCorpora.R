@@ -16,7 +16,7 @@
 #' @param training List containing  the meta data for the training corpora
 #' @param validation List containing  the meta data for the validation corpus
 #' @param test List containing  the meta data for the test corpus
-#' @author John James, \email{j2sdatalab@@gmail.com}
+#' @author John James, \email{jjames@@datasciencestudio.org}
 #' @export
 buildCorpora <- function(design, fullCorpus, training,
                          validation, test) {

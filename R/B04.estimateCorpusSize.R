@@ -23,7 +23,7 @@
 #' }
 #'
 #' @family sample size estimate functions
-#' @author John James, \email{j2sdatalab@@gmail.com}
+#' @author John James, \email{jjames@@datasciencestudio.org}
 #' @seealso
 #'   \code{\link{analyzeLexicalFeatures}}
 #' @export

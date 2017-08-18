@@ -12,7 +12,7 @@
 #'
 #' @param directory - the directory to be checked
 #' @return number of files in the directory
-#' @author John James, \email{j2sdatalab@@gmail.com}
+#' @author John James, \email{jjames@@datasciencestudio.org}
 #' @export
 checkDir <- function(directory) {
 

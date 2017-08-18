@@ -17,7 +17,7 @@
 #' @param chunks Integer indicating number of chunks to sample
 #' @param chunkSize Integer indicating sizes of chunk in sentences
 #' @return analysis - the lexical feature distribution analysis.
-#' @author John James, \email{j2sdatalab@@gmail.com}
+#' @author John James, \email{jjames@@datasciencestudio.org}
 #' @export
 verifyCorpusLexicalFeatures <- function(korpus, chunks, chunkSize) {
 

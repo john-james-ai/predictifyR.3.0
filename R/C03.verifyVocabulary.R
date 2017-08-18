@@ -15,7 +15,7 @@
 #' @param fullCorpus - the meta data for the full corpus
 #' @param sampleCorpus - the meta data for the sample corpus
 #' @return oovRates - the OOV Rate for each corpus
-#' @author John James, \email{j2sdatalab@@gmail.com}
+#' @author John James, \email{jjames@@datasciencestudio.org}
 #' @export
 verifyVocabulary <- function(fullCorpus, sampleCorpus) {
 

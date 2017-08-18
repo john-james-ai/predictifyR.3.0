@@ -12,7 +12,7 @@
 #'
 #' @param object A list containing a directory and filename
 #' @return object R object loaded
-#' @author John James, \email{j2sdatalab@@gmail.com}
+#' @author John James, \email{jjames@@datasciencestudio.org}
 #' @family io functions
 #' @export
 loadObject <- function(object) {

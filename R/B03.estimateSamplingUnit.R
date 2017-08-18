@@ -32,7 +32,7 @@
 #'   \code{\link[zipfR]{EV}}
 #'   \code{\link[stats]{chisq.test}}
 #' @family sample size estimate functions
-#' @author John James, \email{j2sdatalab@@gmail.com}
+#' @author John James, \email{jjames@@datasciencestudio.org}
 #' @export
 estimateSamplingUnit <- function(korpus, sampleSizes = c(100, 500, 1000, 2000),
                                  numSamples = 30) {

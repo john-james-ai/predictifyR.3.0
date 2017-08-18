@@ -11,7 +11,7 @@
 #' @param task - the function to parallelize
 #' @param ... - other parameters required by task
 #' @return r - return from task
-#' @author John James, \email{j2sdatalab@@gmail.com}
+#' @author John James, \email{jjames@@datasciencestudio.org}
 #' @export
 parallelizeTask <- function(task, ...) {
 

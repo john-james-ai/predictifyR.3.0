@@ -12,7 +12,7 @@
 #' designated in the corpus meta data.
 #'
 #' @param korpus - the meta data for pilot corpus
-#' @author John James, \email{j2sdatalab@@gmail.com}
+#' @author John James, \email{jjames@@datasciencestudio.org}
 #' @export
 nGramCorpus <- function(korpus) {
 

@@ -15,7 +15,7 @@
 #' @param document List of texts to be cleaned
 #' @param strings Vector of strings to be removed
 #' @return cleanDocument List of text without lines containing profanity
-#' @author John James, \email{j2sdatalab@@gmail.com}
+#' @author John James, \email{jjames@@datasciencestudio.org}
 #' @family text processing functions
 extractLines <- function(document, strings) {
 

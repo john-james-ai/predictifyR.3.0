@@ -25,7 +25,7 @@
 #' @param vgc - the vocabulary growth curve data
 #' @param numSamples - the number of samples, default = 1000
 #' @return zipfObjects - the zipf object used for analysis and plotting
-#' @author John James, \email{j2sdatalab@@gmail.com}
+#' @author John James, \email{jjames@@datasciencestudio.org}
 #' @seealso \code{\link{createVGC}}
 #'          \code{\link{createGrowthObject}}
 #'          \code{\link{createZipf}}
@@ -109,7 +109,7 @@ createZipfObject <- function(document, vgc, numSamples = 1000) {
 #' @param korpus - meta data for the corpus being analyzed
 #' @param vgc - the vocabulary growth curve data
 #' @return zipfObjects - the zipf object used for analysis and plotting
-#' @author John James, \email{j2sdatalab@@gmail.com}
+#' @author John James, \email{jjames@@datasciencestudio.org}
 #' @seealso \code{\link{createVGC}}
 #'          \code{\link{createGrowthObject}}
 #'          \code{\link{createZipfObject}}

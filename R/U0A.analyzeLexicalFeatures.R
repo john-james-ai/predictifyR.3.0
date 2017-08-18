@@ -20,7 +20,7 @@
 #'   \item{tagPairs}{Dataframe of token POS tag pairs}
 #'
 #'  }
-#' @author John James, \email{j2sdatalab@@gmail.com}
+#' @author John James, \email{jjames@@datasciencestudio.org}
 #' @export
 analyzeLexicalFeatures <- function(document) {
 

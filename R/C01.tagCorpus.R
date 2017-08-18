@@ -12,7 +12,7 @@
 #' document /  POS directory
 #'
 #' @param korpus - meta data for the corpus to be tagged
-#' @author John James, \email{j2sdatalab@@gmail.com}
+#' @author John James, \email{jjames@@datasciencestudio.org}
 #' @export
 tagCorpus <- function(korpus) {
 

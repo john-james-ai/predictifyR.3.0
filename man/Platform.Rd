@@ -17,18 +17,16 @@ Object of \code{\link{R6Class}} with methods for managing environments
 \details{
 This class creates and manages environments.  An environment is essentially
 a directory in which project data resides.  Multiple environments can
-be created to provide multiple versions of the data. This is especially
-useful for projects with large data sets. Users can create environments
-to contain smaller versions of the data sets for testing purposes.
+be created to provide multiple data environments. This is especially
+useful for projects with large data sets or computationally expense
+analyses.
 }
 \section{Methods}{
 
 \describe{
- \item{\code{new(name, desc)}}{Initializes the platform}
- \item{\code{printPlatform()}}{Prints the platform object definition}
- \item{\code{createEnv(name, desc, path, current)}}{Creates an environment}
- \item{\code{archiveEnv(name)}}{Archives an environment}
- \item{\code{existsEnv(name)}}{Checks existence of an environment}
+ \item{\code{new(pName, pDesc)}}{Initializes the platform}
+ \item{\code{createEnv(envName, envDesc, envPath, envStatus)}}{Creates an environment}
+ \item{\code{archiveEnv(environment)}}{Archives an environment}
  \item{\code{listEnv()}}{Provides a data frame of environments in the platform}
 }
 }
@@ -42,11 +40,10 @@ to contain smaller versions of the data sets for testing purposes.
 
 \examples{
 \dontrun{
-Platform$new(name = "predictor", desc = "Predictor object")
-predictor$printPlatform()
-predictor$createEnv(name = "test", desc = "Test Environment", path = "test", current = TRUE)
+predictor$new(pName = "predictor", pDesc = "Platform for predictor project")
+predictor$createEnv(envName = "test", envDesc = "Test Environment",
+                    envPath = "test", envStatus = TRUE)
 predictor$archiveEnv(name = 'test')
-predictor$existsEnv(name = 'production')
 predictor$listEnv()
 predictor$currentEnv
 predictor$currentEnv <- "production"

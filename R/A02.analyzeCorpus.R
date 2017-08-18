@@ -12,7 +12,7 @@
 #'
 #' @param document The document content to be analyzed
 #' @return stats A list containing descriptive statistics
-#' @author John James, \email{j2sdatalab@@gmail.com}
+#' @author John James, \email{jjames@@datasciencestudio.org}
 #' @family text processing functions
 #' @export
 getStats <- function(document) {
@@ -57,7 +57,7 @@ getStats <- function(document) {
 #' @param korpus The corpus documents
 #' @param stats The descriptive stats for the three registers.
 #' @return totals A data frame of descriptive statistics and totals
-#' @author John James, \email{j2sdatalab@@gmail.com}
+#' @author John James, \email{jjames@@datasciencestudio.org}
 #' @family text processing functions
 #' @export
 summarizeAnalysis <- function(korpus, stats) {
@@ -106,7 +106,7 @@ summarizeAnalysis <- function(korpus, stats) {
 #'
 #' @param korpus - the meta data for the corpora to be analyzed
 #' @return analysis - data frame of descriptive statistics
-#' @author John James, \email{j2sdatalab@@gmail.com}
+#' @author John James, \email{jjames@@datasciencestudio.org}
 #' @family text processing functions
 #' @export
 analyzeCorpus <- function(korpus) {

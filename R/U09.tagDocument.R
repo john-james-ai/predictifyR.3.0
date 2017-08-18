@@ -15,7 +15,7 @@
 #' @param sentAnnotator - the openNLP sentence annotator
 #' @param wordAnnotator - the openNLP word annotator
 #' @param posAnnotator - the openNLP POS annotator
-#' @author John James, \email{j2sdatalab@@gmail.com}
+#' @author John James, \email{jjames@@datasciencestudio.org}
 #' @family POS Tagging Functions
 #' @export
 tagSentence <- function(sentence, sentAnnotator, wordAnnotator,
@@ -58,7 +58,7 @@ tagSentence <- function(sentence, sentAnnotator, wordAnnotator,
 #'
 #' @param document - the document object with meta data and content
 #' @return posData -  a list containing the tagged text and the Word/Pos pairs
-#' @author John James, \email{j2sdatalab@@gmail.com}
+#' @author John James, \email{jjames@@datasciencestudio.org}
 #' @family POS Tagging Functions
 #' @export
 tagDocument <- function(document) {

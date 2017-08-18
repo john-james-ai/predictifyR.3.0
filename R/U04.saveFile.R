@@ -15,7 +15,7 @@
 #'    \item{fileName}{File name given to the file to be saved}
 #'    \item{data}{File contents}#'
 #'    }
-#' @author John James, \email{j2sdatalab@@gmail.com}
+#' @author John James, \email{jjames@@datasciencestudio.org}
 #' @family io functions
 #' @export
 saveFile <- function(object) {

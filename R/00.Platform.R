@@ -9,18 +9,17 @@
 #'
 #' This class creates and manages environments.  An environment is essentially
 #' a directory in which project data resides.  Multiple environments can
-#' be created to provide multiple versions of the data. This is especially
-#' useful for projects with large data sets. Users can create environments
-#' to contain smaller versions of the data sets for testing purposes.
+#' be created to provide multiple data environments. This is especially
+#' useful for projects with large data sets or computationally expense
+#' analyses.
 #'
 #' @docType class
 #' @examples
 #' \dontrun{
-#' Platform$new(name = "predictor", desc = "Predictor platform")
-#' predictor$printPlatform()
-#' predictor$createEnv(name = "test", desc = "Test Environment", path = "test", current = TRUE)
+#' predictor$new(pName = "predictor", pDesc = "Platform for predictor project")
+#' predictor$createEnv(envName = "test", envDesc = "Test Environment",
+#'                     envPath = "test", envStatus = TRUE)
 #' predictor$archiveEnv(name = 'test')
-#' predictor$existsEnv(name = 'production')
 #' predictor$listEnv()
 #' predictor$currentEnv
 #' predictor$currentEnv <- "production"
@@ -28,11 +27,9 @@
 #'
 #' @section Methods:
 #' \describe{
-#'  \item{\code{new(name, desc)}}{Initializes the platform}
-#'  \item{\code{printPlatform()}}{Prints the platform object definition}
-#'  \item{\code{createEnv(name, desc, path, current)}}{Creates an environment}
-#'  \item{\code{archiveEnv(name)}}{Archives an environment}
-#'  \item{\code{existsEnv(name)}}{Checks existence of an environment}
+#'  \item{\code{new(pName, pDesc)}}{Initializes the platform}
+#'  \item{\code{createEnv(envName, envDesc, envPath, envStatus)}}{Creates an environment}
+#'  \item{\code{archiveEnv(environment)}}{Archives an environment}
 #'  \item{\code{listEnv()}}{Provides a data frame of environments in the platform}
 #' }
 #'
@@ -43,154 +40,221 @@
 #'
 #'
 #' @return Object of \code{\link{R6Class}} with methods for managing environments
-#' @author John James, \email{j2sdatalab@@gmail.com}
+#' @author John James, \email{jjames@@datasciencestudio.org}
 #' @export
 Platform = R6::R6Class("Platform",
  private = list(
-   ..name = character(0),
-   ..desc = character(0),
-   ..currentEnv = data.frame(),
+   ..pName = character(0),
+   ..pDesc = character(0),
+   ..pPath = character(0),
    ..environments = data.frame(),
-   ..created = character(0)
+   ..currentEnv = data.frame(),
+   ..pCreated = character(0),
+
+   setupLogs = function(envPath) {
+
+     logDir <- file.path(paths$environments, envPath, 'logs')
+
+     futile.logger::flog.threshold(INFO)
+     futile.logger::flog.logger(
+       "green",INFO, appender=appender.file(paste0(logDir, "/", "green.log")))
+     futile.logger::flog.logger(
+       "yellow",WARN, appender=appender.tee(paste0(logDir, "/", "yellow.log")))
+     futile.logger::flog.logger(
+       "red",ERROR, appender=appender.tee(paste0(logDir, "/", "red.log")))
+   },
+
+   validateEnv = function(envName) {
+
+     # Suppress automatically generated error messages
+     opt <- options(show.error.messages=FALSE)
+     on.exit(options(opt))
+
+     assertive.strings::assert_all_strings_are_not_missing_nor_empty(envName)
+     if (envNames == "") {
+       futile.logger::flog.error(paste(
+         "Error in Platform class, validateEnv method",
+         "Environment name must not be blank"),
+         name = 'red')
+       stop()
+     }
+   },
+
+   existEnvObject = function(eName) {
+     if (nrow(subset(private$..environments,
+                     private$..environments$envName == eName)) == 0) {
+       return(FALSE)
+
+     } else {
+       return(TRUE)
+     }
+   }
  ),
 
  active = list(
+   pName = function() { private$..pName },
+   pDesc = function() { private$..pDesc},
+   pPath = function() { private$..pPath},
+   pCreated = function() { private$..pCreated},
+
+
    currentEnv = function(value) {
+
      if (missing(value)) {
        private$..currentEnv
-       } else {
-         # Validate
-         assertive.types::is_character(value)
-         if (nrow(subset(private$..environments, Name == value)) == 0) {
-           futile.logger::flog.error(paste(
-             "Error in currentEnv. Invalid environment."),
-             name = 'red')
-         } else {
-           private$..environments$Current <- FALSE
-           private$..environments$Current[private$..environments$Name == value] <- TRUE
-         }
-       }
+
+     } else if (private$existEnvObject(value) == FALSE) {
+
+       futile.logger::flog.error(paste(
+         "Error in Platform class, currentEnv method",
+         "Environment does not exist"),
+         name = 'red')
+
+     } else {
+       private$..environments$envStatus <- FALSE
+       private$..environments$envStatus[private$..environments$envName == value] <- TRUE
+       private$..currentEnv <- subset(private$..environments,
+                                      private$..environments$envStatus == TRUE)
+     }
    }
  ),
 
  public = list(
-   initialize = function(name, desc) {
 
-     # Check if exists
-     check <- mget(name, inherits = TRUE, ifnotfound = list('Platform not found'))
-     if (!grepl('not found', check[[1]], perl = TRUE)) {
-       futile.logger::flog.warn(paste0(
-         "Platform ", name, " already exists.  Choose another name or access ",
-         name," by using ", name, ".method notation."),
-         name = 'yellow')
-     } else {
+   initialize = function(pName, pDesc = NULL) {
 
-       # Validate
-       assertive.types::is_character(name)
-       assertive.types::is_character(desc)
+     # Suppress automatically generated error messages
+     opt <- options(show.error.messages=FALSE)
+     on.exit(options(opt))
 
-       # Create initial environment
-       envName <- 'main'
-       envDesc <- ' main environment'
-       envPath <- file.path('main')
-       Environment$new(envName, envDesc, envPath)
-       env <- data.frame(Name = envName, Desc = envDesc, Path = envPath,
-                         Current = TRUE, Created = Sys.time(),
-                         row.names = NULL)
-
-       # Instantiate platform
-       private$..name <- name
-       private$..desc <- desc
-       private$..currentEnv <- env
-       private$..environments <- env
-       private$..created <- Sys.time()
+     # Confirm platform object does not exist
+     p <- mget(pName, inherits = FALSE, ifnotfound = c(""))
+     if (class(p[[1]]) != "character") {
+       futile.logger::flog.error(paste(
+         "Error in Platform class, initialize method.",
+         "\nPlatform", pName, "already exists."),
+         name = "red")
+       stop()
      }
-   },
 
-   printPlatform = function() {
-     cat(paste('\nPlatform Name: '), private$..name)
-     cat(paste('\nPlatform Description: '), private$..desc)
-     cat(paste('\nCurrent Environment:\n\n'))
-     print.data.frame(private$..currentEnv)
-     cat(paste('\nPlatform Created: '), as.character(
-        as.POSIXct(private$..created, origin="1970-01-01"), usetz=T), '\n\n')
-   },
-
-   createEnv = function(name, desc, path, current){
-
-     # Validate
-     assertive.types::is_character(name)
-     assertive.types::is_character(desc)
-     assertive.types::is_character(path)
-     assertive.types::is_a_bool(current)
-
-     # Create  environment
-     Environment$new(name, desc, path)
-
-     # Update current environment if current = TRUE
-     if (current == TRUE) {
-       private$..environments$Current = FALSE
+     # Confirm platform directory does not exist
+     pPath <-  gsub(pattern = " ", replacement = "-", pName)
+     if (dir.exists(pPath) == TRUE) {
+       futile.logger::flog.error(paste(
+         "Error in Platform class, initialize method.",
+         "\nPlatform directory", pPath, "already exists."),
+         name = "red")
+       stop()
      }
-     env <- data.frame(Name = name, Desc = desc, Path = path, Current = current,
-                       Created = Sys.time(), row.names = NULL)
-     private$..environments <- rbind(private$..environments, env)
-     private$..currentEnv <- env
+
+     # Validate name
+     assertive.strings::assert_is_a_non_missing_nor_empty_string(pName)
+
+     # Create Directory Structure
+     home <- file.path('./PLATFORMS', pName)
+     envHome <- file.path(home, "environments")
+     envDir <- file.path(envHome, pName)
+     dataDir <- file.path(envDir, 'data')
+     modelDir <- file.path(envDir, 'model')
+     logsDir <- file.path(envDir, 'logs')
+     archives <- file.path(home, "archives")
+
+     dir.create(home, recursive = TRUE)
+     dir.create(envHome, recursive = TRUE)
+     dir.create(envDir, recursive = TRUE)
+     dir.create(dataDir, recursive = TRUE)
+     dir.create(modelDir, recursive = TRUE)
+     dir.create(logsDir, recursive = TRUE)
+     dir.create(archives, recursive = TRUE)
+
+     # Create platform object
+     private$..pName <- pName
+     private$..pDesc <- pDesc
+     private$..pPath <- paste0('./', pName)
+     private$..environments <- .pkgGlobalEnv$env
+     private$..currentEnv <- subset(.pkgGlobalEnv$env, .pkgGlobalEnv$envStatus == TRUE)
+     private$..created <- Sys.time()
+
      invisible(self)
+
    },
 
-   archiveEnv = function(envName) {
+   createEnv = function(eName, eDesc = "", eStatus = FALSE) {
 
-     e <- subset(private$..environments, private$..environments$Name == envName)
-     name <- paste0(sub('\\..*', '', paste0(e$Name)),
+     # Suppress automatically generated error messages
+     opt <- options(show.error.messages=FALSE)
+     on.exit(options(opt))
+
+     # First level validation
+     assertive.strings::assert_all_strings_are_not_missing_nor_empty(eName)
+     assertive.strings::assert_all_strings_are_not_missing_nor_empty(eDesc)
+     assertive.types::is_a_bool(eStatus)
+
+     # Second level validation
+     # Confirm environment doesn't exist
+     if (private$existEnvObject(eName) == TRUE) {
+       futile.logger::flog.error(paste(
+         "Error in Platform class, createEnv method",
+         "Environment", eName, "already exists."),
+         name = "red")
+       stop()
+     }
+
+     # Confirm environment directory does not exist
+     ePath <- gsub(pattern = " ", replacement = "-", eName)
+     ePath <- file.path(private$pName, paths$environments, ePath)
+
+     if (dir.exists(ePath) == TRUE) {
+       futile.logger::flog.error(paste(
+         "Error in Platform class, initialize method",
+         "Directory", ePath, "already exists.",
+         "Delete/move the directory or rebuild this one"),
+         name = "red")
+       stop()
+     }
+
+     # Format
+     if (is.na(eDesc) | is.null(eDesc) |
+         !is.character(eDesc) | eDesc == "") {
+       eDesc <- paste(eName, "environment")
+     }
+
+
+     # Update environment data frame
+     e <- data.frame(envName = envName, envDesc = envDesc, envPath = envPath,
+                     envStatus = envStatus, envCreated = Sys.time())
+
+     if (eStatus == TRUE) { private$..environments$envStatus <- FALSE }
+     private$..environments <- rbind(private$..environments, e)
+     private$..currentEnv <- subset(private$..environments,
+                                    private$..environments$envName == eName)
+     invisible(self)
+
+   },
+
+   archiveEnv = function(eName) {
+
+     e <- subset(private$..environments,
+                 private$..environments$envName == eName)
+
+     envName <- paste0(sub('\\..*', '', paste0(e$envName)),
                             format(Sys.time(),'_%Y%m%d_%H%M%S'))
 
-     desc <- paste(sub('\\..*', '', paste0('Archived ',e$Desc)),
+     envDesc <- paste(sub('\\..*', '', paste0('Archived ',e$envDesc)),
                            format(Sys.time(),'%Y%m%d_%H%M%S'))
-     path <- e$Path
-     current = FALSE
+     envPath <- e$envPath
+     envStatus <- FALSE
 
-     self$createEnv(name, desc, path, current)
+     self$createEnv(envName, envDesc, envStatus)
 
      # Copy data to archive
-     base::dir.create(file.path('./archive', e$Path), recursive = TRUE)
-     base::file.copy(file.path('environments',e$Path),
-                     file.path('./archive', e$Path), recursive = TRUE)
+     base::dir.create(file.path(env$archives, e$envPath), recursive = TRUE)
+     base::file.copy(file.path(env$environments, e$envPath),
+                     file.path(env$archives, e$envPath), recursive = TRUE)
 
    },
 
-   existsEnv = function(envName = NULL) {
-
-     if (length(envName) == 0) {
-       futile.logger::flog.warn(paste(
-         'Error in existsEnv.', 'No environment entered'),
-         name = 'yellow')
-     } else {
-
-       if (nrow(private$..environments) == 0) {
-         return(FALSE)
-       } else if (nrow(subset(private$..environments,
-                              private$..environments$Name == envName)) == 0) {
-         return(FALSE)
-       } else {
-         return(TRUE)
-       }
-     }
-   },
-
-   listEnv = function() {
-       private$..environments
-     }
+   listEnv = function() { private$..environments }
  ),
  lock_objects = FALSE
 )
-
-# rm(predictifyR)
-# predictifyR <- Platform$new(name = 'predictifyR', 'PredictifyR Platform')
-# predictifyR$listEnv()
-# predictifyR$existsEnv('main')
-# predictifyR$existsEnv('dasd')
-# predictifyR$printPlatform()
-# predictifyR$createEnv('test', 'Test Environment', 'test', TRUE)
-# predictifyR$listEnv()
-# predictifyR$printPlatform()
-# predictifyR$currentEnv

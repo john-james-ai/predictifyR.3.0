@@ -17,7 +17,7 @@
 #'    \item{fileName}{File name for the R object created}
 #'    }
 #' @return object - R object saved
-#' @author John James, \email{j2sdatalab@@gmail.com}
+#' @author John James, \email{jjames@@datasciencestudio.org}
 #' @family io functions
 #' @export
 saveObject <- function(object) {

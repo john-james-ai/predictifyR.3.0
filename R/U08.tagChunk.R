@@ -16,7 +16,7 @@
 #' @param wordAnnotator - the openNLP word annotator
 #' @param posAnnotator - the openNLP POS annotator
 #' @return tags - 1 row data frame with frequencies for each feature
-#' @author John James, \email{j2sdatalab@@gmail.com}
+#' @author John James, \email{jjames@@datasciencestudio.org}
 #' @family POS Tagging Functions
 #' @export
 tagChunk <- function(chunk, chunkNum, sentAnnotator, wordAnnotator,

@@ -9,7 +9,7 @@
 #' corpora and runs the analysis pipeline and logs the results.
 #'
 #' @param prod Logical indicating whether to use production data vs. test
-#' @author John James, \email{j2sdatalab@@gmail.com}
+#' @author John James, \email{jjames@@datasciencestudio.org}
 testPackage <- function(prod = FALSE) {
 
   testCleanCorpus <- function(raw, clean) {
